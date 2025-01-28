@@ -1,12 +1,10 @@
 API_HOSTS = {
-    # "test": "http://192.168.29.173/akstore/wp-json/wc/v3/",
     "test": "http://mystore.local/wp-json/wc/v3/",
     "dev": "",
     "prod": ""
 }
 
 WOO_API_HOSTS = {
-    # "test": "http://192.168.29.173/akstore/",
     "test": "http://mystore.local",
     "dev": "",
     "prod": ""
@@ -17,7 +15,6 @@ DB_HOST = {
               "test": {"host": "localhost",
                        "database": "local",
                        "table_prefix": "wp_",
-                       "socket": "/Users/admas/Library/Application Support/Local/run/5MQbIjSnl/mysql/mysqld.sock",
                        "port": 10005
                        },
               "dev": {
