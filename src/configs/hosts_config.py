@@ -15,6 +15,7 @@ DB_HOST = {
               "test": {"host": "localhost",
                        "database": "local",
                        "table_prefix": "wp_",
+                       "socket": "/Users/Path/To/mysql/mysqldb.sock",
                        "port": 10005
                        },
               "dev": {

@@ -13,40 +13,41 @@ def test_create_customer_only_email_password():
 
     logger.info("TEST: Create new customer with email and password only.")
 
-    # Get 'email' and 'first name'
-    rand_info = generate_random_email_and_password()
-    email = rand_info['email']
-    password = rand_info['password']
+    # Get 'email' and 'password'
+    random_info = generate_random_email_and_password()
+    email = random_info['email']
+    password = random_info['password']
 
     # Make the call
-    cust_obj = CustomerHelper()
-    cust_api_info = cust_obj.create_customer(email=email, password=password)
+    customer_helper = CustomerHelper()
+    customer_api_info = customer_helper.create_customer(email=email, password=password)
 
     # Verify 'email' and 'first name' in the response
-    assert cust_api_info['email'] == email, f"Create customer api return wrong email. Email: {email}"
-    assert cust_api_info['first_name'] == '', f"Create customer api returned value for first_name" \
-                                              f"but it should be empty. "
+    assert customer_api_info['email'] == email, \
+        f"Create customer api return wrong email, email should be '{email}', but returned '{customer_api_info['email']}'."
+    assert customer_api_info['first_name'] == '', \
+        f"Create customer api returned value for 'first_name', but it should be empty."
 
     # Verify customer is created in database
-    cust_dao = CustomersDAO()
-    cust_info = cust_dao.get_customer_by_email(email)
+    customer_dao = CustomersDAO()
+    customer_dao_info = customer_dao.get_customer_by_email(email)
 
-    id_in_api = cust_api_info['id']
-    id_in_db = cust_info[0]['ID']
-    assert id_in_api == id_in_db, f'Create customer response "id" not same as "ID" in database.' \
-                                  f'Email: {email}'
+    customer_id_api = customer_api_info['id']
+    customer_id_db = customer_dao_info[0]['ID']
+    assert customer_id_api == customer_id_db, f"Create customer response 'id' not same as 'ID in database, \
+        'id' should be '{customer_id_api}, but 'ID' in database '{customer_id_db}'."
 
 
 @pytest.mark.customers
 @pytest.mark.tcid47
 def test_create_customer_fail_for_existing_email():
 
-    # get existing email from db
-    cust_dao = CustomersDAO()
-    existing_cust = cust_dao.get_random_customer_from_db()
+    # Get existing email from db
+    customer_dao = CustomersDAO()
+    existing_cust = customer_dao.get_random_customer_from_db()
     existing_email = existing_cust[0]['user_email']
 
-    # call the api
+    # Call the api
     req_helper = RequestsUtility()
     payload = {"email": existing_email, "password": "Password1"}
     cust_api_info = req_helper.post(endpoint='customers', payload=payload, expected_status_code=400)

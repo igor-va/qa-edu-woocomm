@@ -37,7 +37,7 @@ def test_create_coupon_percent_discount_type(my_setup, discount_type):
     expected_discount_type = discount_type if discount_type else 'fixed_cart'
 
     pct_off = str(random.randint(50, 90)) + ".00"
-    coupon_code = generate_random_coupon_code(sufix="tcid37", length=5)
+    coupon_code = generate_random_coupon_code(suffix="tcid37", length=5)
 
     # get the helper object
     coupon_helper = my_setup['coupon_helper']
@@ -75,7 +75,7 @@ def test_create_coupon_with_invalid_discount_type():
 
     # prepare data and call api
     payload = dict()
-    payload['code'] = generate_random_coupon_code(sufix="tcid40", length=5)
+    payload['code'] = generate_random_coupon_code(suffix="tcid40", length=5)
     payload['amount'] = str(random.randint(50, 90)) + ".00"
     payload['discount_type'] = generate_random_string()
     rs_coupon = WooAPIUtility().post('coupons', params=payload, expected_status_code=400)
