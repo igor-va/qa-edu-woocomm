@@ -5,7 +5,7 @@ from requests_oauthlib import OAuth1
 import logging as logger
 
 from src.configs.hosts_config import API_HOSTS
-from src.utilities.credentialsUtility import CredentialsUtility
+from src.utilities.credentials_utility import CredentialsUtility
 
 
 class RequestsUtility(object):

@@ -1,8 +1,8 @@
 import pytest
 
 from src.helpers.orders_helper import OrdersHelper
-from src.utilities.wooAPIUtility import WooAPIUtility
-from src.utilities.genericUtilities import generate_random_string
+from src.utilities.woo_api_utility import WooAPIUtility
+from src.utilities.generic_utilities import generate_random_string
 
 
 pytestmark = [pytest.mark.orders, pytest.mark.regression]

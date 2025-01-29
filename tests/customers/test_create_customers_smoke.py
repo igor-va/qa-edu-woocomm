@@ -1,7 +1,7 @@
 import pytest
 import logging as logger
 
-from src.utilities.genericUtilities import generate_random_email_and_password
+from src.utilities.generic_utilities import generate_random_email_and_password
 from src.helpers.customers_helper import CustomerHelper
 from src.dao.customers_dao import CustomersDAO
 
@@ -11,7 +11,6 @@ pytestmark = [pytest.mark.customers, pytest.mark.smoke]
 
 @pytest.mark.tcid29
 def test_create_customer_only_email_password():
-
     logger.info("TEST: Create new customer with email and password only.")
 
     # Get 'email' and 'password'
@@ -41,7 +40,6 @@ def test_create_customer_only_email_password():
 
 @pytest.mark.tcid47
 def test_create_customer_fail_for_existing_email():
-
     # Get existing email from db
     customer_dao = CustomersDAO()
     customer_exist = customer_dao.get_random_customer_from_db()

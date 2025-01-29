@@ -2,7 +2,7 @@ import os
 import logging as logger
 
 from src.configs.hosts_config import WOO_API_HOSTS
-from src.utilities.credentialsUtility import CredentialsUtility
+from src.utilities.credentials_utility import CredentialsUtility
 from woocommerce import API
 
 

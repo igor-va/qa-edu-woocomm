@@ -1,7 +1,7 @@
 import os
 import json
 
-from src.utilities.wooAPIUtility import WooAPIUtility
+from src.utilities.woo_api_utility import WooAPIUtility
 from src.dao.orders_dao import OrdersDAO
 
 

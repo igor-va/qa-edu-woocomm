@@ -1,8 +1,9 @@
 import pytest
 
-from src.utilities.requestsUtility import RequestsUtility
+from src.utilities.requests_utility import RequestsUtility
 from src.dao.products_dao import ProductsDAO
 from src.helpers.products_helper import ProductsHelper
+from src.endpoints.endpoints import Endpoints
 
 
 pytestmark = [pytest.mark.products, pytest.mark.smoke]
@@ -10,25 +11,27 @@ pytestmark = [pytest.mark.products, pytest.mark.smoke]
 
 @pytest.mark.tcid24
 def test_get_all_products():
-    req_helper = RequestsUtility()
-    rs_api = req_helper.get(endpoint='products')
-    assert rs_api, f"Get all products end point returned nothing."
+    # Make the call
+    requests_utility = RequestsUtility()
+    products_response = requests_utility.get(Endpoints.products)
+
+    # Verify response is not empty
+    assert products_response, f"Get all products endpoint returned nothing."
 
 
 @pytest.mark.tcid25
 def test_get_product_by_id():
+    # Get a random product from db
+    product_database = ProductsDAO().get_random_product_from_db()
+    product_database_id = product_database[0]['ID']
+    product_database_name = product_database[0]['post_title']
 
-    # get a product (test data) from db
-    rand_product = ProductsDAO().get_random_product_from_db(1)
-    rand_product_id = rand_product[0]['ID']
-    db_name = rand_product[0]['post_title']
-
-    # make the call
+    # Make the call
     product_helper = ProductsHelper()
-    rs_api = product_helper.get_product_by_id(rand_product_id)
-    api_name = rs_api['name']
+    product_response = product_helper.get_product_by_id(product_database_id)
+    product_response_name = product_response['name']
 
-    # verify the response
-    assert db_name == api_name, f"Get product by id returned wrong product. Id: {rand_product_id}" \
-                                f"Db name: {db_name}, Api name: {api_name}"
-
+    # Verify the response
+    assert product_database_name == product_response_name, \
+        f"Get product by id returned wrong product, DB ID get '{product_database_id}',  \
+        DB name get {product_database_name}, API name returned {product_response_name}"

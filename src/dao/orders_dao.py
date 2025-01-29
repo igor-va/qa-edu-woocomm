@@ -1,4 +1,4 @@
-from src.utilities.dbUtility import DBUtility
+from src.utilities.db_utility import DBUtility
 
 
 class OrdersDAO(object):

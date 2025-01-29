@@ -3,7 +3,7 @@ import os
 import logging as logger
 import dotenv
 
-from src.utilities.credentialsUtility import CredentialsUtility
+from src.utilities.credentials_utility import CredentialsUtility
 from src.configs.hosts_config import DB_HOST
 
 

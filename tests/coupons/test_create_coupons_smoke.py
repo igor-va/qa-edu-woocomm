@@ -2,9 +2,9 @@ import pytest
 import random
 import logging as logger
 
-from src.utilities.genericUtilities import generate_random_coupon_code, generate_random_string
+from src.utilities.generic_utilities import generate_random_coupon_code, generate_random_string
 from src.helpers.coupons_helper import CouponsHelper
-from src.utilities.wooAPIUtility import WooAPIUtility
+from src.utilities.woo_api_utility import WooAPIUtility
 
 
 pytestmark = [pytest.mark.gregression, pytest.mark.coupons]

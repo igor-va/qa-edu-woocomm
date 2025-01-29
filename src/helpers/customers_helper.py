@@ -1,5 +1,5 @@
-from src.utilities.genericUtilities import generate_random_email_and_password
-from src.utilities.requestsUtility import RequestsUtility
+from src.utilities.generic_utilities import generate_random_email_and_password
+from src.utilities.requests_utility import RequestsUtility
 from src.endpoints.endpoints import Endpoints
 
 
