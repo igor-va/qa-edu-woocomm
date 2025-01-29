@@ -19,7 +19,7 @@ class RequestsUtility(object):
     @staticmethod
     def assert_status_code(url, status_code, expected_status_code, response_json):
         assert status_code == expected_status_code, \
-            f"Bad Status code. Expected {expected_status_code}, Actual status code: {status_code}," \
+            f"Bad 'Status code', expected '{expected_status_code}', actual returned: '{status_code}'," \
             f"URL: {url}, Response Json: {response_json}"
 
     def post(self, endpoint, payload=None, headers=None, expected_status_code=200):

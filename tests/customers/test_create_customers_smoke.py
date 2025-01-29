@@ -34,7 +34,8 @@ def test_create_customer_only_email_password():
 
     customer_id_api = customer_api_info['id']
     customer_id_db = customer_dao_info[0]['ID']
-    assert customer_id_api == customer_id_db, f"Create customer response 'id' not same as 'ID in database, \
+    assert customer_id_api == customer_id_db, \
+        f"Create customer response 'id' not same as 'ID in database, \
         'id' should be '{customer_id_api}, but 'ID' in database '{customer_id_db}'."
 
 
@@ -44,20 +45,17 @@ def test_create_customer_fail_for_existing_email():
 
     # Get existing email from db
     customer_dao = CustomersDAO()
-    existing_cust = customer_dao.get_random_customer_from_db()
-    existing_email = existing_cust[0]['user_email']
+    customer_exist = customer_dao.get_random_customer_from_db()
+    customer_email = customer_exist[0]['user_email']
 
     # Call the api
-    req_helper = RequestsUtility()
-    payload = {"email": existing_email, "password": "Password1"}
-    cust_api_info = req_helper.post(endpoint='customers', payload=payload, expected_status_code=400)
+    customer_helper = CustomerHelper()
+    customer_api_info = customer_helper.create_customer(email=customer_email, exp_st_code=400)
 
-    assert cust_api_info['code'] == 'registration-error-email-exists', f"Create customer with" \
-        f"existing user error 'code' is not correct. Expected: 'registration-error-email-exists', " \
-        f"Actual: {cust_api_info['code']}"
+    assert customer_api_info['code'] == 'registration-error-email-exists', \
+        f"Create customer with existing user error 'code' is not correct, \
+        should be: 'registration-error-email-exists', but returned '{customer_api_info['code']}'."
 
-    assert cust_api_info['message'] == \
-        f'An account is already registered with {existing_email}. Please log in or use a different email address.', \
-        f"Create customer with existing user error 'message' is not correct. " \
-        f"Expected: 'An account is already registered with your email address. Please log in.', " \
-        f"Actual: {cust_api_info['message']}"
+    assert customer_api_info['message'] == \
+        f"An account is already registered with {customer_email}. Please log in or use a different email address.", \
+        f"Create customer with existing user error 'message' is not correct."
