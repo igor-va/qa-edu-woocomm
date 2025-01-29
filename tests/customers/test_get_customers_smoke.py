@@ -5,11 +5,15 @@ from src.utilities.requestsUtility import RequestsUtility
 from src.endpoints.endpoints import Endpoints
 
 
-@pytest.mark.customers
+pytestmark = [pytest.mark.customers, pytest.mark.smoke]
+
+
 @pytest.mark.tcid30
 def test_get_all_customers():
 
+    # Make the call
     request_helper = RequestsUtility()
-    response_api_info = request_helper.get(Endpoints.customers)
+    customer_response = request_helper.get(Endpoints.customers)
 
-    assert response_api_info, f"Response of list all customers is empty."
+    # Verify response is not empty
+    assert customer_response, f"Response of list all customers is empty."

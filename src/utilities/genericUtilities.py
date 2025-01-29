@@ -17,20 +17,21 @@ def generate_random_email_and_password() -> dict:
     return random_info
 
 
-def generate_random_string(length=10, prefix=None, suffix=None):
-
-    random_string = ''.join(random.choices(string.ascii_lowercase, k=length))
-
-    if prefix:
-        random_string = prefix + random_string
-    if suffix:
-        random_string = random_string + suffix
+def generate_random_string():
+    fake = Faker()
+    random_string = fake.word(part_of_speech="noun").title()
 
     return random_string
 
 
-def generate_random_coupon_code(suffix=None, length=10):
+def generate_random_number():
+    fake = Faker()
+    number = fake.pyfloat(min_value=10, max_value=1000, right_digits=2)
 
+    return str(number)
+
+
+def generate_random_coupon_code(suffix=None, length=10):
     code = ''.join(random.choices(string.ascii_uppercase, k=length))
     if suffix:
         code += suffix

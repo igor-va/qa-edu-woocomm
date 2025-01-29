@@ -2,6 +2,7 @@ class Endpoints:
     """This class contains the API endpoints for the service."""
 
     customers = "customers"
+    products = "products"
 
 
 class OldTest:

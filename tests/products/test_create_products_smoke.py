@@ -1,6 +1,6 @@
 import pytest
 
-from src.utilities.genericUtilities import generate_random_string
+from src.utilities.genericUtilities import *
 from src.helpers.products_helper import ProductsHelper
 from src.dao.products_dao import ProductsDAO
 
@@ -9,26 +9,26 @@ pytestmark = [pytest.mark.products, pytest.mark.smoke]
 
 
 @pytest.mark.tcid26
-def test_create_1_simple_product():
+def test_create_one_simple_product():
 
-    # generate some data
+    # Generate some data
     payload = dict()
-    payload['name'] = generate_random_string(20)
+    payload['name'] = generate_random_string()
     payload['type'] = "simple"
-    payload['regular_price'] = "10.99"
+    payload['regular_price'] = generate_random_number()
 
-    # make the call
-    product_rs = ProductsHelper().call_create_product(payload)
+    # Make the call
+    product_response = ProductsHelper().call_create_product(payload)
 
-    # verify the response is not empty
-    assert product_rs, f"Create product api response is empty. Payload: {payload}"
-    assert product_rs['name'] == payload['name'], f"Create product api call response has" \
-        f"unexpected name. Expected: {payload['name']}, Actual: {product_rs['name']}"
+    # Verify the response is not empty
+    assert product_response, f"Create product api response is empty, payload should be {payload}"
+    assert product_response['name'] == payload['name'], f"Create product api call response has \
+        unexpected name, expected {payload['name']}, but returned {product_response['name']}"
 
-    # verify the product exists in db
-    product_id = product_rs['id']
-    db_product = ProductsDAO().get_product_by_id(product_id)
+    # Verify the product exists in db
+    product_response_id = product_response['id']
+    product_database = ProductsDAO().get_product_by_id(product_response_id)
+    product_database_name = product_database[0]['post_title']
 
-    assert payload['name'] == db_product[0]['post_title'], f"Create product, title in db does not match " \
-        f"title in api. DB: {db_product['post_title']}, API: {payload['name']}"
-
+    assert payload['name'] == product_database_name, \
+        f"Title in DB does not match title in API, DB get {product_database_name}, API returned {payload['name']}."

@@ -1,6 +1,7 @@
 import logging as logger
 
 from src.utilities.requestsUtility import RequestsUtility
+from src.endpoints.endpoints import Endpoints
 
 
 class ProductsHelper(object):
@@ -12,7 +13,7 @@ class ProductsHelper(object):
         return self.requests_utility.get(f"products/{product_id}")
 
     def call_create_product(self, payload):
-        return self.requests_utility.post('products', payload=payload, expected_status_code=201)
+        return self.requests_utility.post(Endpoints.products, payload=payload, expected_status_code=201)
 
     def call_list_products(self, payload=None):
 
