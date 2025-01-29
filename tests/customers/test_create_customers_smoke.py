@@ -4,7 +4,6 @@ import logging as logger
 from src.utilities.genericUtilities import generate_random_email_and_password
 from src.helpers.customers_helper import CustomerHelper
 from src.dao.customers_dao import CustomersDAO
-from src.utilities.requestsUtility import RequestsUtility
 
 
 @pytest.mark.customers
@@ -31,7 +30,6 @@ def test_create_customer_only_email_password():
     # Verify customer is created in database
     customer_dao = CustomersDAO()
     customer_dao_info = customer_dao.get_customer_by_email(email)
-
     customer_id_api = customer_api_info['id']
     customer_id_db = customer_dao_info[0]['ID']
     assert customer_id_api == customer_id_db, \
@@ -48,14 +46,14 @@ def test_create_customer_fail_for_existing_email():
     customer_exist = customer_dao.get_random_customer_from_db()
     customer_email = customer_exist[0]['user_email']
 
-    # Call the api
+    # Call the api with existing email
     customer_helper = CustomerHelper()
     customer_api_info = customer_helper.create_customer(email=customer_email, exp_st_code=400)
 
+    # Verify customer is not created in database
     assert customer_api_info['code'] == 'registration-error-email-exists', \
         f"Create customer with existing user error 'code' is not correct, \
         should be: 'registration-error-email-exists', but returned '{customer_api_info['code']}'."
-
     assert customer_api_info['message'] == \
         f"An account is already registered with {customer_email}. Please log in or use a different email address.", \
         f"Create customer with existing user error 'message' is not correct."
