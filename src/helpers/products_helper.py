@@ -16,9 +16,8 @@ class ProductsHelper(object):
         return self.requests_utility.post(Endpoints.products, payload=payload, expected_status_code=201)
 
     def call_list_products(self, payload=None):
-
         max_pages = 1000
-        all_products = []
+        products_response = []
         for i in range(1, max_pages + 1):
             logger.debug(f"List products page number: {i}")
 
@@ -30,17 +29,17 @@ class ProductsHelper(object):
 
             # add the current page number to the call
             payload['page'] = i
-            rs_api = self.requests_utility.get('products', payload=payload)
+            response_json = self.requests_utility.get(Endpoints.products, payload=payload)
 
-            # if there not is response then stop the loop b/c there are no more products
-            if not rs_api:
+            # If there not is response then stop the loop b/c there are no more products
+            if not response_json:
                 break
             else:
-                all_products.extend(rs_api)
+                products_response.extend(response_json)
         else:
             raise Exception(f"Unable to find all products after {max_pages} pages.")
 
-        return all_products
+        return products_response
 
     def call_retrieve_product(self, product_id):
         return self.requests_utility.get(f'products/{product_id}')

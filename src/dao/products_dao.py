@@ -21,9 +21,9 @@ class ProductsDAO(object):
 
         return self.db_helper.execute_select(sql)
 
-    def get_products_created_after_given_date(self, _date):
+    def get_products_created_after_given_date(self, created_date):
         sql = f"""SELECT * FROM {self.db_helper.database}.{self.db_helper.table_prefix}posts 
-                  WHERE post_type = 'product' AND post_date > '{_date}' 
+                  WHERE post_type='product' AND post_date>'{created_date}' 
                   LIMIT 10000;"""
 
         return self.db_helper.execute_select(sql)
