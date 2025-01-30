@@ -1,70 +1,55 @@
 import pytest
 
-from src.dao.products_dao import ProductsDAO
-from src.helpers.orders_helper import OrdersHelper
 from src.helpers.customers_helper import CustomersHelper
+from src.utilities.generic_utilities import *
 
 
-@pytest.fixture(scope='module')
-def my_orders_smoke_setup():
-    product_dao = ProductsDAO()
-    rand_product = product_dao.get_random_products(1)
-    product_id = rand_product[0]['ID']
-
-    order_helper = OrdersHelper()
-
-    info = {'product_id': product_id,
-            'order_helper': order_helper}
-
-    return info
+pytestmark = [pytest.mark.orders, pytest.mark.smoke]
 
 
-@pytest.mark.smoke
-@pytest.mark.orders
 @pytest.mark.tcid48
 def test_create_paid_order_guest_user(my_orders_smoke_setup):
-    order_helper = my_orders_smoke_setup['order_helper']
+    # Create helper objects
+    orders_helper = my_orders_smoke_setup['orders_helper']
 
     customer_id = 0
-    product_id = my_orders_smoke_setup['product_id']
+    product_id = my_orders_smoke_setup['product_database_id']
 
-    # make the call
-    info = {"line_items": [
+    # Make the call
+    payload = {"line_items": [
         {
             "product_id": product_id,
-            "quantity": 1
+            "quantity": generate_random_number_integer()
         }
     ]}
-    order_json = order_helper.create_order(additional_args=info)
+    order_response = orders_helper.create_order(payload_additional=payload)
 
-    # verify response
-    expected_products = [{'product_id': product_id}]
-    order_helper.verify_order_is_created(order_json, customer_id, expected_products)
+    # Verify response
+    products_expected = [{'product_id': product_id}]
+    orders_helper.verify_order_is_created(order_response, customer_id, products_expected)
 
 
-@pytest.mark.smoke
-@pytest.mark.orders
 @pytest.mark.tcid49
 def test_create_paid_order_new_created_customer(my_orders_smoke_setup):
-    # create helper objects
-    order_helper = my_orders_smoke_setup['order_helper']
-    customer_helper = CustomersHelper()
+    # Create helper objects
+    orders_helper = my_orders_smoke_setup['orders_helper']
+    customers_helper = CustomersHelper()
 
-    # make the call
-    cust_info = customer_helper.create_customer()
-    customer_id = cust_info['id']
-    product_id = my_orders_smoke_setup['product_id']
+    # Make the call
+    customer_response = customers_helper.create_customer()
+    customer_response_id = customer_response['id']
+    product_id = my_orders_smoke_setup['product_database_id']
 
-    info = {"line_items": [
+    payload = {"line_items": [
         {
             "product_id": product_id,
-            "quantity": 1
+            "quantity": generate_random_number_integer()
         }
     ],
-        "customer_id": customer_id
+        "customer_id": customer_response_id
     }
-    order_json = order_helper.create_order(additional_args=info)
+    order_response = orders_helper.create_order(payload_additional=payload)
 
-    # # verify response
+    # Verify response
     expected_products = [{'product_id': product_id}]
-    order_helper.verify_order_is_created(order_json, customer_id, expected_products)
+    orders_helper.verify_order_is_created(order_response, customer_response_id, expected_products)

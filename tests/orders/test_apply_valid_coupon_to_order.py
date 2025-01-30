@@ -40,7 +40,7 @@ def test_apply_valid_coupon_to_order(my_setup_teardown):
         "shipping_lines": [{"method_id": "flat_rate", "method_title": "Flat Rate", "total": "0.00"}]
         }
 
-    rs_order = order_helper.create_order(additional_args=order_payload_addition)
+    rs_order = order_helper.create_order(payload_additional=order_payload_addition)
 
     # calculate expected total price based on coupon and product price
     expected_total = float(my_setup_teardown['product_price']) * (float(my_setup_teardown['discount_pct'])/100)

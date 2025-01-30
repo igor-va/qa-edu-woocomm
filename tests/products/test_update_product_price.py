@@ -40,7 +40,7 @@ def test_update_regular_price_should_update_price():
         products_helper.call_update_product(product_id, payload)
 
     # Make the update to 'regular_price'
-    new_price = generate_random_number()
+    new_price = generate_random_number_float()
     payload = dict()
     payload['regular_price'] = new_price
     product_response = products_helper.call_update_product(product_id, payload)
@@ -116,7 +116,7 @@ def test_update_on_sale_field_buy_updating_sale_price():
     products_helper = ProductsHelper()
 
     # Create product for the tests and
-    regular_price = generate_random_number()
+    regular_price = generate_random_number_float()
     payload = dict()
     payload['name'] = generate_random_string()
     payload['type'] = 'simple'

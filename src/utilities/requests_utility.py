@@ -1,6 +1,5 @@
 import requests
 import os
-import json
 from requests_oauthlib import OAuth1
 import logging as logger
 

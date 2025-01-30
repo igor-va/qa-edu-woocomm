@@ -10,7 +10,6 @@ def generate_random_email_and_password() -> dict:
     email = fake.email()
     password = fake.password(length=20)
     random_info = {'email': email, 'password': password}
-
     logger.debug(f"Randomly generated email and password: {random_info}")
     return random_info
 
@@ -21,9 +20,15 @@ def generate_random_string() -> str:
     return random_string
 
 
-def generate_random_number() -> str:
+def generate_random_number_float() -> str:
     fake = Faker()
     number = fake.pyfloat(min_value=10, max_value=1000, right_digits=2)
+    return str(number)
+
+
+def generate_random_number_integer() -> str:
+    fake = Faker()
+    number = fake.random_int(min=1, max=20)
     return str(number)
 
 

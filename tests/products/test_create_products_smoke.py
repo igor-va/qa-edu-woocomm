@@ -14,7 +14,7 @@ def test_create_one_simple_product():
     payload = dict()
     payload['name'] = generate_random_string()
     payload['type'] = "simple"
-    payload['regular_price'] = generate_random_number()
+    payload['regular_price'] = generate_random_number_float()
 
     # Make the call
     product_response = ProductsHelper().call_create_product(payload)

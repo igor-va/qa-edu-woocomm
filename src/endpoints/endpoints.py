@@ -1,13 +1,8 @@
 class Endpoints:
-    """This class contains the API endpoints for the service."""
+    """This class contains the API endpoints."""
 
     customers = "customers"
     products = "products"
+    orders = "orders"
 
 
-class OldTest:
-    CREATE_ENDPOINT = "/api/create"
-    GET_ENDPOINT = "/api/get/"
-    GET_ALL_ENDPOINT = "/api/getall/"
-    UPDATE_ENDPOINT = "/api/patch/"
-    DELETE_ENDPOINT = "/api/delete/"

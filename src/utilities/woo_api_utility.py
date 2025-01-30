@@ -22,49 +22,44 @@ class WooAPIUtility(object):
             version="wc/v3"
         )
 
-    def assert_status_code(self):
-        assert self.status_code == self.expected_status_code, f"Bad Status code." \
-          f"Expected {self.expected_status_code}, Actual status code: {self.status_code}," \
-          f"URL: {self.endpoint}, Response Json: {self.rs_json}"
+    @staticmethod
+    def assert_status_code(status_code, expected_status_code):
+        assert status_code == expected_status_code, \
+            f"Bad 'Status code', expected '{expected_status_code}', actual returned: '{status_code}'." \
 
     def post(self, wc_endpoint, params=None, expected_status_code=200):
-
-        rs_api = self.wcapi.post(wc_endpoint, data=params)
-        self.status_code = rs_api.status_code
-        self.expected_status_code = expected_status_code
-        self.rs_json = rs_api.json()
-        self.endpoint = wc_endpoint
-        self.assert_status_code()
-
-        logger.debug(f"POST API response: {self.rs_json}")
-
-        return self.rs_json
+        response_api = self.wcapi.post(wc_endpoint, data=params)
+        status_code = response_api.status_code
+        response_json = response_api.json()
+        self.assert_status_code(status_code, expected_status_code)
+        logger.debug(f"POST API response: {response_json}")
+        return response_json
 
     def get(self, wc_endpoint, params=None, expected_status_code=200):
 
         rs_api = self.wcapi.get(wc_endpoint, params=params)
         self.status_code = rs_api.status_code
         self.expected_status_code = expected_status_code
-        self.rs_json = rs_api.json()
+        self.response_json = rs_api.json()
         self.endpoint = wc_endpoint
         self.assert_status_code()
 
-        logger.debug(f"GET API response: {self.rs_json}")
+        logger.debug(f"GET API response: {self.response_json}")
 
-        return self.rs_json
+        return self.response_json
 
     def put(self, wc_endpoint, params=None, expected_status_code=200):
 
         rs_api = self.wcapi.put(wc_endpoint, data=params)
         self.status_code = rs_api.status_code
         self.expected_status_code = expected_status_code
-        self.rs_json = rs_api.json()
+        self.response_json = rs_api.json()
         self.endpoint = wc_endpoint
         self.assert_status_code()
 
-        logger.debug(f"PUT API response: {self.rs_json}")
+        logger.debug(f"PUT API response: {self.response_json}")
 
-        return self.rs_json
+        return self.response_json
 
 
 if __name__ == '__main__':

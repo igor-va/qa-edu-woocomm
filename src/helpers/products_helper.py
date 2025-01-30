@@ -19,7 +19,7 @@ class ProductsHelper(object):
 
     def call_list_products(self, payload=None):
         max_pages = 1000
-        products_response = []
+        response_json = []
         for i in range(1, max_pages + 1):
             logger.debug(f"List products page number: {i}")
 
@@ -29,19 +29,19 @@ class ProductsHelper(object):
             if 'per_page' not in payload.keys():
                 payload['per_page'] = 100
 
-            # add the current page number to the call
+            # Add the current page number to the call
             payload['page'] = i
-            response_json = self.requests_utility.get(Endpoints.products, payload=payload)
+            response_json_part = self.requests_utility.get(Endpoints.products, payload=payload)
 
             # If there not is response then stop the loop b/c there are no more products
-            if not response_json:
+            if not response_json_part:
                 break
             else:
-                products_response.extend(response_json)
+                response_json.extend(response_json_part)
         else:
             raise Exception(f"Unable to find all products after {max_pages} pages.")
 
-        return products_response
+        return response_json
 
     def call_retrieve_product_by_id(self, product_id):
         response_json = self.requests_utility.get(f"{Endpoints.products}/{product_id}")
