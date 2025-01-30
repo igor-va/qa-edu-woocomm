@@ -10,10 +10,12 @@ class ProductsHelper(object):
         self.requests_utility = RequestsUtility()
 
     def get_product_by_id(self, product_id):
-        return self.requests_utility.get(f"{Endpoints.products}/{product_id}")
+        response_json = self.requests_utility.get(f"{Endpoints.products}/{product_id}")
+        return response_json
 
     def call_create_product(self, payload):
-        return self.requests_utility.post(Endpoints.products, payload=payload, expected_status_code=201)
+        response_json = self.requests_utility.post(Endpoints.products, payload=payload, expected_status_code=201)
+        return response_json
 
     def call_list_products(self, payload=None):
         max_pages = 1000
@@ -41,8 +43,10 @@ class ProductsHelper(object):
 
         return products_response
 
-    def call_retrieve_product(self, product_id):
-        return self.requests_utility.get(f'products/{product_id}')
+    def call_retrieve_product_by_id(self, product_id):
+        response_json = self.requests_utility.get(f"{Endpoints.products}/{product_id}")
+        return response_json
 
     def call_update_product(self, product_id, payload=None):
-        return self.requests_utility.put(f'products/{product_id}', payload=payload)
+        response_json = self.requests_utility.put(f"{Endpoints.products}/{product_id}", payload=payload)
+        return response_json

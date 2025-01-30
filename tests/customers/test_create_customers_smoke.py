@@ -2,7 +2,7 @@ import pytest
 import logging as logger
 
 from src.utilities.generic_utilities import generate_random_email_and_password
-from src.helpers.customers_helper import CustomerHelper
+from src.helpers.customers_helper import CustomersHelper
 from src.dao.customers_dao import CustomersDAO
 
 
@@ -19,8 +19,8 @@ def test_create_customer_only_email_password():
     password = random_info['password']
 
     # Make the call
-    customer_helper = CustomerHelper()
-    customer_response = customer_helper.create_customer(email=email, password=password)
+    customers_helper = CustomersHelper()
+    customer_response = customers_helper.create_customer(email=email, password=password)
 
     # Verify 'email' and 'first name' in the response
     assert customer_response['email'] == email, \
@@ -29,8 +29,8 @@ def test_create_customer_only_email_password():
         f"Create customer api returned value for 'first_name', but it should be empty."
 
     # Verify customer is created in database
-    customer_dao = CustomersDAO()
-    customer_database = customer_dao.get_customer_by_email(email)
+    customers_dao = CustomersDAO()
+    customer_database = customers_dao.get_customer_by_email(email)
     customer_response_id = customer_response['id']
     customer_database_id = customer_database[0]['ID']
     assert customer_response_id == customer_database_id, \
@@ -41,12 +41,12 @@ def test_create_customer_only_email_password():
 @pytest.mark.tcid47
 def test_create_customer_fail_for_existing_email():
     # Get existing email from db
-    customer_dao = CustomersDAO()
-    customer_exist = customer_dao.get_random_customer_from_db()
+    customers_dao = CustomersDAO()
+    customer_exist = customers_dao.get_random_customer_from_db()
     customer_email = customer_exist[0]['user_email']
 
     # Call the api with existing email
-    customer_helper = CustomerHelper()
+    customer_helper = CustomersHelper()
     customer_response = customer_helper.create_customer(email=customer_email, exp_st_code=400)
 
     # Verify customer is not created in database

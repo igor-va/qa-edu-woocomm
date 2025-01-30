@@ -3,7 +3,7 @@ from src.utilities.requests_utility import RequestsUtility
 from src.endpoints.endpoints import Endpoints
 
 
-class CustomerHelper(object):
+class CustomersHelper(object):
 
     def __init__(self):
         self.requests_utility = RequestsUtility()

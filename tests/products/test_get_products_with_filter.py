@@ -5,6 +5,9 @@ from src.helpers.products_helper import ProductsHelper
 from src.dao.products_dao import ProductsDAO
 
 
+pytestmark = [pytest.mark.products, pytest.mark.regression]
+
+
 @pytest.mark.regression
 class TestListProductsWithFilter(object):
 

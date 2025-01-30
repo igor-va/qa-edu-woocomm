@@ -22,13 +22,13 @@ def test_get_all_products():
 @pytest.mark.tcid25
 def test_get_product_by_id():
     # Get a random product from db
-    product_database = ProductsDAO().get_random_product_from_db()
+    product_database = ProductsDAO().get_random_products()
     product_database_id = product_database[0]['ID']
     product_database_name = product_database[0]['post_title']
 
     # Make the call
-    product_helper = ProductsHelper()
-    product_response = product_helper.get_product_by_id(product_database_id)
+    products_helper = ProductsHelper()
+    product_response = products_helper.get_product_by_id(product_database_id)
     product_response_name = product_response['name']
 
     # Verify the response

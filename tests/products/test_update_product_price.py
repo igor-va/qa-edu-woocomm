@@ -1,9 +1,8 @@
-import random
 import pytest
 
 from src.helpers.products_helper import ProductsHelper
 from src.dao.products_dao import ProductsDAO
-from src.utilities.generic_utilities import generate_random_string
+from src.utilities.generic_utilities import *
 
 
 pytestmark = [pytest.mark.products, pytest.mark.regression]
@@ -13,88 +12,95 @@ pytestmark = [pytest.mark.products, pytest.mark.regression]
 def test_update_regular_price_should_update_price():
     """
     Verifies updating the 'regular_price' field should automatically update the 'price' field.
+    For this test the 'sale_price' of the product must be empty. If product has 'sale_price', updating the 'regular_price'
+    does not update the 'price'. So get a bunch of products and loop until you find one that is not 'on_sale'. If all in
+    the list are 'on_sale' then take random one and update the 'sale_price'.
     """
 
-    # create helper objects and get random product from db
-    product_helper = ProductsHelper()
-    product_dao = ProductsDAO()
+    # Create helper objects
+    products_helper = ProductsHelper()
+    products_dao = ProductsDAO()
 
-    # for this test the 'sale_price' of the product must be empty. If product has sale price, updating the 'regular_price'
-    # does not update the 'price'. So get a bunch of products and loop until you find one that is not on sale. If all in
-    # the list are on sale then take random one and update the sale price
-    rand_products = product_dao.get_random_product_from_db(5)
-    for product in rand_products:
+    # Get random product from db
+    products_random = products_dao.get_random_products(5)
+    for product in products_random:
+        # Get random product if product 'sale_price' be empty
         product_id = product['ID']
-        product_data = product_helper.call_retrieve_product(product_id)
-        if product_data['on_sale']:
+        product_response = products_helper.call_retrieve_product_by_id(product_id)
+        if product_response['on_sale']:
             continue
         else:
             break
     else:
-        # take a random product and make it not on sale by setting sale_price=''
-        test_product = random.choice(rand_products)
-        product_id = test_product['ID']
-        product_helper.call_update_product(product_id, {'sale_price': ''})
+        # Take random product and make it not 'on_sale' by setting 'sale_price'=''
+        product_random = random.choice(products_random)
+        product_id = product_random['ID']
+        payload = dict()
+        payload['sale_price'] = ''
+        products_helper.call_update_product(product_id, payload)
 
-    # make the update to 'regular_price'
-    new_price = str(random.randint(10, 100)) + '.' + str(random.randint(10, 99))
+    # Make the update to 'regular_price'
+    new_price = generate_random_number()
     payload = dict()
     payload['regular_price'] = new_price
+    product_response = products_helper.call_update_product(product_id, payload)
 
-    rs_update = product_helper.call_update_product(product_id, payload=payload)
+    # Verify the response has the 'price' and 'regular_price' has updated and 'sale_price' is not updated
+    assert product_response['price'] == new_price, \
+        f"Updating the 'regular_price' did not update the 'price' field, \
+        price field actual value '{product_response['price']}', but expected '{new_price}'."
+    assert product_response['regular_price'] == new_price, \
+        f"Updating the 'regular_price' did not update in the response, \
+        actual response returned '{product_response['regular_price']}', but expected '{new_price}'."
+    assert product_response['sale_price'] == '', \
+        f"The 'sale_price' field should be empty, but actual response returned '{product_response['sale_price']}'."
 
-    # verify the response has the 'price' and 'regular_price' has updated and 'sale_price' is not updated
-    assert rs_update['price'] == new_price, \
-        f"Update product api call response. Updating the 'regular_price' did not " \
-        f"update the 'price' field. price field actual value {rs_update['price']}," \
-        f"but expected: {new_price}"
-
-    assert rs_update['regular_price'] == new_price, \
-        f"Update product api call response. Updating the 'regular_price' did not " \
-        f"update in the response. Actual response 'regular_price'={rs_update['price']}," \
-        f"but expected: {new_price}"
-
-    # get the product after the update and verify response
-    rs_product = product_helper.call_retrieve_product(product_id)
-    assert rs_product['price'] == new_price, \
-        f"Update product api call response. Updating the 'regular_price' did not " \
-        f"update the 'price' field. price field actual value {rs_product['price']}," \
-        f"but expected: {new_price}"
-
-    assert rs_product['regular_price'] == new_price, \
-        f"Update product api call response. Updating the 'regular_price' did not " \
-        f"update. Actual 'regular_price'={rs_product['price']}," \
-        f"but expected: {new_price}"
+    # Get the product after the update and verify response
+    product_response = products_helper.call_retrieve_product_by_id(product_id)
+    assert product_response['price'] == new_price, \
+        f"Updating the 'regular_price' did not update the 'price' field, \
+        price field actual value '{product_response['price']}', but expected '{new_price}'."
+    assert product_response['regular_price'] == new_price, \
+        f"Updating the 'regular_price' did not update in the response, \
+        actual response returned '{product_response['regular_price']}', but expected '{new_price}'."
+    assert product_response['sale_price'] == '', \
+        f"The 'sale_price' field should be empty, but actual response returned '{product_response['sale_price']}'."
 
 
 @pytest.mark.tcid65
 def test_adding_sale_price_should_set_on_sale_flag_true():
     """
-    When the sale price of a product is updated, then it should set the field 'on_sale' = True
+    When the 'sale_price' of a product is updated, then it should set the field 'on_sale'=True
     """
 
-    # first get a product from db that is not on sale
-    product_helper = ProductsHelper()
-    product_dao = ProductsDAO()
-    rand_product = product_dao.get_random_products_that_are_not_on_sale(1)
-    product_id = rand_product[0]['ID']
+    # Create helper objects
+    products_helper = ProductsHelper()
+    products_dao = ProductsDAO()
 
-    # first check the status is False to start with
-    original_info = product_helper.call_retrieve_product(product_id)
-    assert not original_info['on_sale'], f"Getting test data with 'on_sale=False' but got 'True'. Unable to use this product for test."
+    # First get a product from db that is not 'on_sale'
+    product_database = products_dao.get_random_products_that_are_not_on_sale(1)
+    product_database_id = product_database[0]['ID']
 
-    # update the 'sale price' of the product
-    sale_price = float(original_info['regular_price']) * 0.75  # sale is 75% of original
+    # Check the 'on_sale' field is 'False' to start with
+    product_response_before = products_helper.call_retrieve_product_by_id(product_database_id)
+    assert not product_response_before['on_sale'], \
+        f"Getting test data with 'on_sale'='False' but got 'True', unable to use this product for test."
 
+    # Update the 'sale_price' of the product
+    regular_price = product_response_before['regular_price']
+    if regular_price == "":
+        sale_price = 10
+    else:
+        sale_price = float(regular_price) * 0.75  # sale is 75% of original
     payload = dict()
     payload['sale_price'] = str(sale_price)
-    product_helper.call_update_product(product_id, payload=payload)
+    products_helper.call_update_product(product_database_id, payload=payload)
 
-    # get the product sale price is updated
-    after_info = product_helper.call_retrieve_product(product_id)
-    assert after_info['sale_price'] == str(sale_price), f"Updated product 'sale_price' but value did not update." \
-                                                        f"Product id: {product_id}, Expected sale price: {sale_price}," \
-                                                        f"Actual sale price: {after_info['sale_price']}"
+    # Get the product 'sale_price' and verify is updated
+    product_response_after = products_helper.call_retrieve_product_by_id(product_database_id)
+    assert product_response_after['sale_price'] == str(sale_price), \
+        f"Updated product 'sale_price' but value did not update, product id '{product_database_id}', \
+        expected 'sale_price' '{sale_price}', but actual 'sale_price' '{product_response_after['sale_price']}'."
 
 
 @pytest.mark.tcid63
@@ -102,32 +108,42 @@ def test_adding_sale_price_should_set_on_sale_flag_true():
 def test_update_on_sale_field_buy_updating_sale_price():
     """
     Two test case.
-    First case update the 'sale_price > 0' and verify the field changes to 'on_sale=True'.
-    Second case update the 'sale_price=""' and verify the field changes to 'on_sale=False'.
+    First case update the 'sale_price'>0 and verify the field changes to 'on_sale'=True.
+    Second case update the 'sale_price'="" and verify the field changes to 'on_sale'=False.
     """
 
-    product_helper = ProductsHelper()
+    # Create helper objects
+    products_helper = ProductsHelper()
 
-    # create product for the tests and verify the product has on_sale=False
+    # Create product for the tests and
+    regular_price = generate_random_number()
     payload = dict()
-    regular_price = str(random.randint(10, 100)) + '.' + str(random.randint(10, 99))
-    payload['name'] = generate_random_string(20)
-    payload['type'] = "simple"
+    payload['name'] = generate_random_string()
+    payload['type'] = 'simple'
     payload['regular_price'] = regular_price
-    product_info = product_helper.call_create_product(payload)
-    product_id = product_info['id']
-    assert not product_info['on_sale'], f"Newly created product should not have 'on_sale=True'. Product id: {product_id}"
-    assert not product_info['sale_price'], f"Newly created product should not have value for 'sale_price' field."
+    product_response_before = products_helper.call_create_product(payload)
+    product_response_id = product_response_before['id']
 
-    # (tcid-63) now update the 'sale_price' and verify the 'on_sale' is set to True
-    sale_price = float(regular_price) * .75
-    product_helper.call_update_product(product_id, {'sale_price': str(sale_price)})
-    product_after_update = product_helper.call_retrieve_product(product_id)
-    assert product_after_update['on_sale'], f"Updated 'sale_price' of product, but the 'on_sale' did not set to 'True'." \
-                                            f"Product id: {product_id}"
+    # Verify the product has 'on_sale'=False
+    assert not product_response_before['on_sale'], \
+        f"Newly created product should not have 'on_sale'=True, product id '{product_response_id}'."
+    assert not product_response_before['sale_price'], \
+        f"Newly created product should not have value for 'sale_price' field."
 
-    # (tcid-64) now update the sale_price to empty string and verify the 'on_sale' is set to False
-    product_helper.call_update_product(product_id, {'sale_price': ''})
-    product_after_update = product_helper.call_retrieve_product(product_id)
-    assert not product_after_update['on_sale'], f"Updated 'sale_price=""' of product, but the 'on_sale' did not set to 'False'." \
-                                                f"Product id: {product_id}"
+    # For 'tcid-63' update the 'sale_price' and verify the 'on_sale' is set to True
+    payload = dict()
+    payload['sale_price'] = str(float(regular_price) * .75)
+    products_helper.call_update_product(product_response_id, payload)
+    product_response_after = products_helper.call_retrieve_product_by_id(product_response_id)
+    assert product_response_after['on_sale'], \
+        f"Updated 'sale_price' of product, but the 'on_sale' did not set to 'True', \
+        product id '{product_response_id}'."
+
+    # For 'tcid-64' update the 'sale_price' to empty string and verify the 'on_sale' is set to False
+    payload = dict()
+    payload['sale_price'] = ''
+    products_helper.call_update_product(product_response_id, payload)
+    product_response_after = products_helper.call_retrieve_product_by_id(product_response_id)
+    assert not product_response_after['on_sale'], \
+        f"Updated 'sale_price'='' of product, but the 'on_sale' did not set to 'False', \
+        product id '{product_response_id}'."

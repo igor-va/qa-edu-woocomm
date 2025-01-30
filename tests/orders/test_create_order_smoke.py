@@ -2,13 +2,13 @@ import pytest
 
 from src.dao.products_dao import ProductsDAO
 from src.helpers.orders_helper import OrdersHelper
-from src.helpers.customers_helper import CustomerHelper
+from src.helpers.customers_helper import CustomersHelper
 
 
 @pytest.fixture(scope='module')
 def my_orders_smoke_setup():
     product_dao = ProductsDAO()
-    rand_product = product_dao.get_random_product_from_db(1)
+    rand_product = product_dao.get_random_products(1)
     product_id = rand_product[0]['ID']
 
     order_helper = OrdersHelper()
@@ -48,7 +48,7 @@ def test_create_paid_order_guest_user(my_orders_smoke_setup):
 def test_create_paid_order_new_created_customer(my_orders_smoke_setup):
     # create helper objects
     order_helper = my_orders_smoke_setup['order_helper']
-    customer_helper = CustomerHelper()
+    customer_helper = CustomersHelper()
 
     # make the call
     cust_info = customer_helper.create_customer()
