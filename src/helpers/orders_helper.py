@@ -60,8 +60,10 @@ class OrdersHelper(object):
                 f"Create order does not have at least 1 expected product in DB, \
                 product id '{product['product_id']}', order id '{order_response_id}'."
 
-    def call_update_an_order(self, order_id, payload):
-        return self.woo_helper.put(f'orders/{order_id}', params=payload)
+    def call_update_an_order(self, order_id, payload, exp_st_code=200):
+        response_json = self.woo_helper.put(f'{Endpoints.orders}/{order_id}', params=payload, expected_status_code=exp_st_code)
+        return response_json
 
     def call_retrieve_an_order(self, order_id):
-        return self.woo_helper.get(f"orders/{order_id}")
+        response_json = self.woo_helper.get(f"{Endpoints.orders}/{order_id}")
+        return response_json

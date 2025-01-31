@@ -2,7 +2,7 @@ import pytest
 
 from src.helpers.orders_helper import OrdersHelper
 from src.utilities.woo_api_utility import WooAPIUtility
-from src.utilities.generic_utilities import generate_random_string
+from src.utilities.generic_utilities import *
 
 
 pytestmark = [pytest.mark.orders, pytest.mark.regression]
@@ -11,69 +11,69 @@ pytestmark = [pytest.mark.orders, pytest.mark.regression]
 @pytest.mark.parametrize("new_status",
                          [
                              pytest.param('cancelled', marks=[pytest.mark.tcid55, pytest.mark.smoke]),
-                             pytest.param('completed', marks=pytest.mark.tcid56),
+                             pytest.param('processing', marks=pytest.mark.tcid56),
                              pytest.param('on-hold', marks=pytest.mark.tcid57),
                          ])
 def test_update_order_status(new_status):
+    # Create new order
+    orders_helper = OrdersHelper()
+    order_response_cur = orders_helper.create_order()
+    current_status = order_response_cur['status']
+    assert current_status != new_status, \
+        f"Current status of order is already '{new_status}',unable to run test."
 
-    # create new order
-    order_helper = OrdersHelper()
-    order_json = order_helper.create_order()
-    cur_status = order_json['status']
-    assert cur_status != new_status, f"Current status of order is already {new_status}. " \
-                                     f"Unable to run test."
-
-    # update the status
-    order_id = order_json['id']
+    # Update the status
+    order_id = order_response_cur['id']
     payload = {"status": new_status}
-    order_helper.call_update_an_order(order_id, payload)
+    orders_helper.call_update_an_order(order_id, payload)
 
-    # get order information
-    new_order_info = order_helper.call_retrieve_an_order(order_id)
+    # Get order information
+    order_response_new = orders_helper.call_retrieve_an_order(order_id)
 
-    # verify the new order status is what was updated
-    assert new_order_info['status'] == new_status, \
-        f"Updated order status to '{new_status}'," \
-        f"but order is still '{new_order_info['status']}'"
+    # Verify the new order status is what was updated
+    assert order_response_new['status'] == new_status, \
+        f"Updated order status to '{new_status}', but order is still '{order_response_new['status']}'."
 
 
 @pytest.mark.tcid58
 def test_update_order_status_to_random_string():
+    # Generate random 'status'
+    new_status = generate_random_string().lower()
 
-    new_status = 'abcdefg'
+    # Create new order
+    orders_helper = OrdersHelper()
+    order_response_cur = orders_helper.create_order()
+    order_id = order_response_cur['id']
 
-    # create new order
-    order_helper = OrdersHelper()
-    order_json = order_helper.create_order()
-    order_id = order_json['id']
-
-    # update the status
+    # Update the 'status'
     payload = {"status": new_status}
-    rs_api = WooAPIUtility().put(f'orders/{order_id}', params=payload, expected_status_code=400)
+    order_response_new = orders_helper.call_update_an_order(order_id, payload, exp_st_code=400)
 
-    assert rs_api['code'] == 'rest_invalid_param', \
-        f"Update order status to random string did not have " \
-        f"correct code in response. Expected: 'rest_invalid_param' Actual: {rs_api['code']}"
-
-    assert rs_api['message'] == 'Invalid parameter(s): status',  \
-        f"Update order status to random " \
-        f"string did not have correct message in response. " \
-        f"Expected: 'rest_invalid_param' Actual: {rs_api['message']}"
+    # Verify 'status' is not update in database
+    assert order_response_new['code'] == 'rest_invalid_param', \
+        f"Update order status to random string did not have correct code in response, \
+        expected 'rest_invalid_param', but actual '{order_response_new['code']}'."
+    assert order_response_new['message'] == 'Invalid parameter(s): status',  \
+        f"Update order status to random string did not have correct message in response, \
+        expected 'rest_invalid_param', but actual: '{order_response_new['message']}'."
 
 
 @pytest.mark.tcid59
 def test_update_order_customer_note():
+    # Create new order
+    orders_helper = OrdersHelper()
+    order_response_cur = orders_helper.create_order()
+    order_id = order_response_cur['id']
 
-    order_helper = OrdersHelper()
-    order_json = order_helper.create_order()
-    order_id = order_json['id']
+    # Update the 'customer_note'
+    customer_note = generate_random_sentence()
+    payload = {"customer_note": customer_note}
+    orders_helper.call_update_an_order(order_id, payload)
 
-    rand_string = generate_random_string(40)
-    payload = {"customer_note": rand_string}
-    order_helper.call_update_an_order(order_id, payload)
+    # Get order information
+    order_response_new = orders_helper.call_retrieve_an_order(order_id)
 
-    # get order information
-    new_order_info = order_helper.call_retrieve_an_order(order_id)
-    assert new_order_info['customer_note'] == rand_string, \
-        f"Update order's 'customer_note' field," \
-        f"failed. Expected: {rand_string}, Actual: {new_order_info['customer_note']}"
+    # Verify the 'customer_note' is what was updated
+    assert order_response_new['customer_note'] == customer_note, \
+        f"Update order's 'customer_note' field failed, \
+        expected '{customer_note}', but actual '{order_response_new['customer_note']}'."

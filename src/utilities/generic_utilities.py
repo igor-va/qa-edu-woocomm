@@ -20,6 +20,12 @@ def generate_random_string() -> str:
     return random_string
 
 
+def generate_random_sentence() -> str:
+    fake = Faker()
+    random_sentence = fake.sentence()
+    return random_sentence
+
+
 def generate_random_number_float() -> str:
     fake = Faker()
     number = fake.pyfloat(min_value=10, max_value=1000, right_digits=2)
