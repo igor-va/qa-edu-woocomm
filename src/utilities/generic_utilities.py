@@ -26,10 +26,11 @@ def generate_random_sentence() -> str:
     return random_sentence
 
 
-def generate_random_number_float() -> str:
+def generate_random_number_float(min_value=10, max_value=1000, round_value=2) -> str:
     fake = Faker()
-    number = fake.pyfloat(min_value=10, max_value=1000, right_digits=2)
-    return str(number)
+    number = fake.pyfloat(min_value=min_value, max_value=max_value, right_digits=round_value)
+    number = f"{number:.2f}"
+    return number
 
 
 def generate_random_number_integer() -> str:
@@ -38,8 +39,7 @@ def generate_random_number_integer() -> str:
     return str(number)
 
 
-def generate_random_coupon_code(suffix=None, length=10):
-    code = ''.join(random.choices(string.ascii_uppercase, k=length))
-    if suffix:
-        code += suffix
-    return code
+def generate_random_coupon_code():
+    fake = Faker()
+    coupon_code = fake.bothify(text='coupon-####-????', letters=string.ascii_uppercase)
+    return coupon_code

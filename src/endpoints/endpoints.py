@@ -4,5 +4,6 @@ class Endpoints:
     customers = "customers"
     products = "products"
     orders = "orders"
+    coupons = "coupons"
 
 

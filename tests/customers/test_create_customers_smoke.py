@@ -54,5 +54,5 @@ def test_create_customer_fail_for_existing_email():
         f"Create customer with existing user error 'code' is not correct, \
         should be: 'registration-error-email-exists', but returned '{customer_response['code']}'."
     assert customer_response['message'] == \
-        f"An account is already registered with {customer_email}, please log in or use a different email address.", \
+        f"An account is already registered with {customer_email}. Please log in or use a different email address.", \
         f"Create customer with existing user error 'message' is not correct."

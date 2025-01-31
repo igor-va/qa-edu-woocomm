@@ -3,6 +3,9 @@ import pytest
 from src.helpers.orders_helper import OrdersHelper
 
 
+pytestmark = [pytest.mark.orders, pytest.mark.regression]
+
+
 @pytest.mark.tcid60
 def test_apply_valid_coupon_to_order(my_setup_teardown):
     """
