@@ -12,7 +12,7 @@ class OrdersHelper(object):
         self.current_file_dir = os.path.dirname(os.path.realpath(__file__))
         self.woo_helper = WooAPIUtility()
 
-    def create_order(self, payload_additional=None):
+    def create_order(self, payload_add=None):
         payload_template = os.path.join(self.current_file_dir, '..', 'data', 'create_order_payload.json')
 
         # In the data (create_order_payload.json) verify the product id used exists, "line_items": {"product_id": 12,"quantity": 1}
@@ -22,10 +22,10 @@ class OrdersHelper(object):
             payload = json.load(f)
 
         # If user adds more info to payload, then update it
-        if payload_additional:
-            assert isinstance(payload_additional, dict), \
-                f"Parameter 'additional_args' must be a 'dictionary', but found '{type(payload_additional)}'."
-            payload.update(payload_additional)
+        if payload_add:
+            assert isinstance(payload_add, dict), \
+                f"Parameter 'additional_args' must be a 'dictionary', but found '{type(payload_add)}'."
+            payload.update(payload_add)
 
         response_json = self.woo_helper.post(Endpoints.orders, params=payload, expected_status_code=201)
 

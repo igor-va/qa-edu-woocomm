@@ -22,7 +22,7 @@ def test_create_paid_order_guest_user(my_orders_smoke_setup):
             "quantity": generate_random_number_integer()
         }
     ]}
-    order_response = orders_helper.create_order(payload_additional=payload)
+    order_response = orders_helper.create_order(payload_add=payload)
 
     # Verify response
     products_expected = [{'product_id': product_id}]
@@ -48,7 +48,7 @@ def test_create_paid_order_new_created_customer(my_orders_smoke_setup):
     ],
         "customer_id": customer_response_id
     }
-    order_response = orders_helper.create_order(payload_additional=payload)
+    order_response = orders_helper.create_order(payload_add=payload)
 
     # Verify response
     expected_products = [{'product_id': product_id}]
