@@ -7,8 +7,7 @@ from src.utilities.generic_utilities import *
 pytestmark = [pytest.mark.coupons, pytest.mark.regression]
 
 
-@pytest.mark.parametrize("discount_type",
-                         [
+@pytest.mark.parametrize("discount_type", [
                              pytest.param(None, marks=[pytest.mark.tcid36, pytest.mark.smoke]),
                              pytest.param('percent', marks=[pytest.mark.tcid37, pytest.mark.smoke]),
                              pytest.param('fixed_product', marks=pytest.mark.tcid38),
