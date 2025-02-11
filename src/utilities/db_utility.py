@@ -49,6 +49,7 @@ class DBUtility(object):
         return connection
 
     def execute_select(self, sql):
+        """Execute select"""
 
         conn = self.create_connection()
 

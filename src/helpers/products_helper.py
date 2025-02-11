@@ -13,7 +13,9 @@ class ProductsHelper(object):
         response_json = self.requests_utility.get(f"{Endpoints.products}/{product_id}")
         return response_json
 
-    def call_create_product(self, payload):
+    def call_create_product(self, payload) -> dict:
+        """Call create product"""
+
         response_json = self.requests_utility.post(Endpoints.products, payload=payload, expected_status_code=201)
         return response_json
 
