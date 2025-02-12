@@ -26,7 +26,6 @@ class DBUtility(object):
             raise Exception(f"Can not run test in docker if WP_HOST=local")
 
         self.env = os.environ.get('ENV', 'test')
-
         self.host = DB_HOST[self.machine][self.env]['host']
         self.socket = DB_HOST[self.machine][self.env]['socket']
         self.port = DB_HOST[self.machine][self.env]['port']
@@ -34,6 +33,7 @@ class DBUtility(object):
         self.table_prefix = DB_HOST[self.machine][self.env]['table_prefix']
 
     def create_connection(self):
+        """Create connection to DB"""
 
         if self.wp_host == 'ampps':
             connection = pymysql.connect(host=self.host, user=self.creds['db_user'],
@@ -49,22 +49,22 @@ class DBUtility(object):
         return connection
 
     def execute_select(self, sql):
-        """Execute select"""
-
+        """Execute SQL SELECT"""
+        sql = sql
         conn = self.create_connection()
 
         try:
-            logger.debug(f"Executing: {sql}")
-            cur = conn.cursor(pymysql.cursors.DictCursor)
-            cur.execute(sql)
-            rs_dict = cur.fetchall()
-            cur.close()
+            # logger.debug(f"Executing: {sql}")
+            cursor = conn.cursor(pymysql.cursors.DictCursor)
+            cursor.execute(sql)
+            result_select = cursor.fetchall()
+            cursor.close()
         except Exception as e:
             raise Exception(f"Failed running sql: {sql} \n  Error: {str(e)}")
         finally:
             conn.close()
 
-        return rs_dict
+        return result_select
 
     def execute_sql(self, sql):
         pass

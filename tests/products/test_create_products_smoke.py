@@ -29,16 +29,15 @@ def test_create_one_simple_product() -> None:
 
     with allure.step(f"Verify the response is not empty"):
         assert product_api, \
-            f"Create product api response is empty, payload should be '{payload}'."
+            f"Call 'Create a product' is empty, 'payload' should be '{payload}'."
 
     with allure.step(f"Verify the response has returned the correct 'name'"):
         product_api_name = product_api['name']
         assert product_api_name == payload_name, \
-            f"Create product api response has unexpected name, \
-            expected '{payload_name}', actual '{product_api_name}'."
+            f"Call 'Create a product' return unexpected 'name', expected '{payload_name}', actual '{product_api_name}'."
 
     with allure.step(f"Verify the product exists in DB"):
         product_db = ProductsDAO().get_product_by_id(product_api['id'])
         product_db_name = product_db[0]['post_title']
         assert product_db_name == payload_name, \
-            f"Title in DB does not match title in API, DB get '{product_db_name}', but expected '{payload_name}'."
+            f"Title in DB does not match title in API, expected '{payload_name}', actual '{product_db_name}'."

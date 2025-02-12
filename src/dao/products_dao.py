@@ -20,8 +20,8 @@ class ProductsDAO(object):
 
         sql = f"""SELECT * FROM {self.db_helper.database}.{self.db_helper.table_prefix}posts 
                   WHERE ID={product_id};"""
-        response_sql = self.db_helper.execute_select(sql)
-        return response_sql
+        result_select = self.db_helper.execute_select(sql)
+        return result_select
 
     def get_products_created_after_given_date(self, created_date):
         sql = f"""SELECT * FROM {self.db_helper.database}.{self.db_helper.table_prefix}posts 

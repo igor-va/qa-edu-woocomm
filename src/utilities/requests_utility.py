@@ -18,12 +18,14 @@ class RequestsUtility(object):
         self.requests = requests
 
     @staticmethod
-    def assert_status_code(status_code, expected_status_code):
+    def assert_status_code(status_code, expected_status_code) -> None:
         assert status_code == expected_status_code, \
             f"Bad 'status_code', expected '{expected_status_code}', actual '{status_code}'."
 
-    def post(self, endpoint, payload=None, headers=None, expected_status_code=200):
-        with allure.step(f"Make the 'request POST'"):
+    def post(self, endpoint, payload=None, headers=None, expected_status_code=200) -> dict:
+        """Sends a POST request"""
+
+        with allure.step(f"Make the 'POST request'"):
             url = self.base_url + endpoint
             response_api = self.requests.post(url=url, json=payload, headers=headers, auth=self.auth)
         with allure.step(f"Verify 'status code'"):
