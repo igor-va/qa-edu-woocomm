@@ -9,14 +9,20 @@ class ProductsHelper(object):
     def __init__(self):
         self.requests_utility = RequestsUtility()
 
-    def get_product_by_id(self, product_id):
-        response_json = self.requests_utility.get(f"{Endpoints.products}/{product_id}")
-        return response_json
-
     def call_create_product(self, payload) -> dict:
         """Call 'Create a product'"""
 
         response_json = self.requests_utility.post(Endpoints.products, payload=payload, expected_status_code=201)
+        return response_json
+
+    def call_retrieve_product_by_id(self, product_id):
+        response_json = self.requests_utility.get(f"{Endpoints.products}/{product_id}")
+        return response_json
+
+    def call_list_all_products(self):
+        """Call 'List all products'"""
+
+        response_json = self.requests_utility.get(Endpoints.products)
         return response_json
 
     def call_list_products(self, payload=None):
@@ -45,9 +51,7 @@ class ProductsHelper(object):
 
         return response_json
 
-    def call_retrieve_product_by_id(self, product_id):
-        response_json = self.requests_utility.get(f"{Endpoints.products}/{product_id}")
-        return response_json
+
 
     def call_update_product(self, product_id, payload=None):
         response_json = self.requests_utility.put(f"{Endpoints.products}/{product_id}", payload=payload)

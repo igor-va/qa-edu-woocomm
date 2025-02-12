@@ -1,26 +1,37 @@
 import pytest
+import allure
 
-from src.utilities.requests_utility import RequestsUtility
 from src.dao.products_dao import ProductsDAO
 from src.helpers.products_helper import ProductsHelper
-from src.endpoints.endpoints import Endpoints
 
 
-pytestmark = [pytest.mark.products, pytest.mark.smoke]
+pytestmark = [pytest.mark.products, pytest.mark.smoke, pytest.mark.api]
 
 
+@allure.feature("Products")
+@allure.story("List all products")
+@allure.title("Test get all products")
+@allure.description("Verify 'GET /products' does not return empty")
 @pytest.mark.tcid24
 def test_get_all_products():
-    # Make the call
-    requests_utility = RequestsUtility()
-    products_response = requests_utility.get(Endpoints.products)
+    """Verify 'GET /products' does not return empty"""
 
-    # Verify response is not empty
-    assert products_response, f"Get all products endpoint returned nothing."
+    with allure.step(f"Make the call 'List all products'"):
+        products_helper = ProductsHelper()
+        product_api = products_helper.call_list_all_products()
+
+    with allure.step(f"Verify the response is not empty"):
+        assert product_api, f"Call 'List all products' returned nothing."
 
 
+@allure.feature("Products")
+@allure.story("Retrieve a product")
+@allure.title("Test get product by id")
+@allure.description("Verify 'GET /products/id' returns a product with the given id")
 @pytest.mark.tcid25
 def test_get_product_by_id():
+    """Verify 'GET /products/id' returns a product with the given id"""
+
     # Get a random product from db
     product_database = ProductsDAO().get_random_products()
     product_database_id = product_database[0]['ID']

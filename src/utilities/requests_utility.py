@@ -36,13 +36,17 @@ class RequestsUtility(object):
             return response_json
 
     def get(self, endpoint, payload=None, headers=None, expected_status_code=200):
-        url = self.base_url + endpoint
-        response_api = requests.get(url=url, json=payload, headers=headers, auth=self.auth)
-        status_code = response_api.status_code
-        response_json = response_api.json()
-        self.assert_status_code(url, status_code, expected_status_code, response_json)
-        logger.debug(f"GET API response: {response_json}")
-        return response_json
+        """Sends a GET request"""
+
+        with allure.step(f"Make the 'GET request'"):
+            url = self.base_url + endpoint
+            response_api = requests.get(url=url, json=payload, headers=headers, auth=self.auth)
+        with allure.step(f"Verify 'status code'"):
+            status_code = response_api.status_code
+            self.assert_status_code(status_code, expected_status_code)
+        with allure.step(f"Returned 'response'"):
+            response_json = response_api.json()
+            return response_json
 
     def put(self, endpoint, payload=None, headers=None, expected_status_code=200):
         url = self.base_url + endpoint
