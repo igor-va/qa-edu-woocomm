@@ -2,6 +2,7 @@ import pymysql
 import os
 import logging as logger
 import dotenv
+import allure
 
 from src.utilities.credentials_utility import CredentialsUtility
 from src.configs.hosts_config import DB_HOST
@@ -50,21 +51,23 @@ class DBUtility(object):
 
     def execute_select(self, sql):
         """Execute SQL SELECT"""
-        sql = sql
-        conn = self.create_connection()
 
-        try:
-            # logger.debug(f"Executing: {sql}")
-            cursor = conn.cursor(pymysql.cursors.DictCursor)
-            cursor.execute(sql)
-            result_select = cursor.fetchall()
-            cursor.close()
-        except Exception as e:
-            raise Exception(f"Failed running sql: {sql} \n  Error: {str(e)}")
-        finally:
-            conn.close()
+        with allure.step(f"Create connection to DB"):
+            conn = self.create_connection()
 
-        return result_select
+        with allure.step(f"Execute SQL SELECT"):
+            try:
+                # logger.debug(f"Executing: {sql}")
+                cursor = conn.cursor(pymysql.cursors.DictCursor)
+                cursor.execute(sql)
+                result_select = cursor.fetchall()
+                cursor.close()
+            except Exception as e:
+                raise Exception(f"Failed running sql: {sql} \n  Error: {str(e)}")
+            finally:
+                conn.close()
+
+            return result_select
 
     def execute_sql(self, sql):
         pass

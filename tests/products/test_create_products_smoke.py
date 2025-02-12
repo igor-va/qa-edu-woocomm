@@ -10,7 +10,7 @@ pytestmark = [pytest.mark.products, pytest.mark.smoke, pytest.mark.api]
 
 
 @allure.feature("Products")
-@allure.story("Create products")
+@allure.story("Create a product")
 @allure.title("Test create one simple product")
 @allure.description("Verify 'POST /products' create a one simple product")
 @pytest.mark.tcid26
@@ -36,8 +36,10 @@ def test_create_one_simple_product() -> None:
         assert product_api_name == payload_name, \
             f"Call 'Create a product' return unexpected 'name', expected '{payload_name}', actual '{product_api_name}'."
 
-    with allure.step(f"Verify the product exists in DB"):
+    with allure.step(f"Get product from DB by 'id'"):
         product_db = ProductsDAO().get_product_by_id(product_api['id'])
+
+    with allure.step(f"Verify the product exists in DB"):
         product_db_name = product_db[0]['post_title']
         assert product_db_name == payload_name, \
             f"Title in DB does not match title in API, expected '{payload_name}', actual '{product_db_name}'."
