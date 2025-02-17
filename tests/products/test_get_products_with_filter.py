@@ -1,4 +1,5 @@
 import pytest
+import allure
 from datetime import datetime, timedelta
 
 from src.helpers.products_helper import ProductsHelper
@@ -8,30 +9,33 @@ from src.dao.products_dao import ProductsDAO
 pytestmark = [pytest.mark.products, pytest.mark.regression]
 
 
-@pytest.mark.regression
+@allure.feature("Products")
+@allure.story("List all products")
 class TestListProductsWithFilter(object):
+    """Tests for retrieve products with filter"""
 
+    @allure.title("Test get products with filter after")
+    @allure.description("Verify 'GET /products' with filter 'after'")
     @pytest.mark.tcid51
-    def test_list_products_with_filter_after(self):
-        # Create data
-        payload = dict()
-        after_created_date = (datetime.now().replace(microsecond=0) - timedelta(days=300)).isoformat()
-        payload['after'] = after_created_date
+    def test_get_products_with_filter_after(self) -> None:
+        """Verify 'GET /products' with filter 'after'"""
 
-        # Make the call and verify response is not empty
-        products_response = ProductsHelper().call_list_products(payload)
-        assert products_response, f"Empty response for 'list products with filer"
-
-        # Get data from db
-        products_database = ProductsDAO().get_products_created_after_given_date(after_created_date)
-
-        # Verify length response match db
-        assert len(products_response) == len(products_database), \
-            f"List products with filter 'after' returned unexpected number of products, \
-            expected {len(products_database)}, but actual {len(products_response)}."
-
-        # Verify ids response match db
-        products_response_id = [i['id'] for i in products_response]
-        products_database_id = [i['ID'] for i in products_database]
-        products_id_diff = list(set(products_response_id) - set(products_database_id))
-        assert not products_id_diff, f"List products with filter, product ids in response mismatch in db."
+        with allure.step(f"Generate test data"):
+            payload = dict()
+            date_after = (datetime.now().replace(microsecond=0) - timedelta(days=300)).isoformat()
+            payload['after'] = date_after
+        with allure.step(f"Make the call 'List all products' with filter 'after'"):
+            products_api = ProductsHelper().call_list_products_with_filter(payload)
+        with allure.step(f"Verify the response is not empty"):
+            assert products_api, f"Empty response for cal 'List all products' with filter after"
+        with allure.step(f"Get data from DB with filter 'after'"):
+            products_db = ProductsDAO().get_products_created_after_given_date(date_after)
+        with allure.step(f"Verify length API match DB"):
+            assert len(products_api) == len(products_db), \
+                f"List products with filter 'after' returned unexpected number of products, " \
+                f"expected {len(products_db)}, actual {len(products_api)}."
+        with allure.step(f"Verify that API and DB 'ID' are the same"):
+            products_api_id = [i['id'] for i in products_api]
+            products_db_id = [i['ID'] for i in products_db]
+            products_id_diff = list(set(products_api_id) - set(products_db_id))
+            assert not products_id_diff, f"Product 'ID' in API mismatch in DB."

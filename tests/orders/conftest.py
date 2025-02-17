@@ -29,7 +29,7 @@ def my_setup_teardown():
     discount_pct = '84.00'
 
     # Get a random product for order
-    products_response = ProductsHelper().call_list_products()
+    products_response = ProductsHelper().call_list_products_with_filter()
     product_response = random.choice(products_response)
 
     # Generate some data

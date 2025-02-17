@@ -41,4 +41,4 @@ def test_get_product_by_id() -> None:
         product_api_name = product_api['name']
     with allure.step(f"Verify the response"):
         assert product_db_name == product_api_name, \
-            f"Get product by id returned wrong product, expected '{product_db_name}', actual '{product_api_name}'."
+            f"Get product by id returned wrong product, expected {product_db_name}, actual {product_api_name}."
