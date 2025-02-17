@@ -5,6 +5,7 @@ from src.endpoints.endpoints import Endpoints
 
 
 class ProductsHelper(object):
+    """The 'Products' API class allows you to create, view, update, and delete individual or a batch of products"""
 
     def __init__(self):
         self.requests_utility = RequestsUtility()
@@ -16,6 +17,8 @@ class ProductsHelper(object):
         return response_json
 
     def call_retrieve_product_by_id(self, product_id):
+        """call 'Retrieve a product'"""
+
         response_json = self.requests_utility.get(f"{Endpoints.products}/{product_id}")
         return response_json
 
@@ -50,8 +53,6 @@ class ProductsHelper(object):
             raise Exception(f"Unable to find all products after {max_pages} pages.")
 
         return response_json
-
-
 
     def call_update_product(self, product_id, payload=None):
         response_json = self.requests_utility.put(f"{Endpoints.products}/{product_id}", payload=payload)

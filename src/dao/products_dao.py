@@ -4,16 +4,19 @@ from src.utilities.db_utility import DBUtility
 
 
 class ProductsDAO(object):
+    """The 'Products' class allows you to select of products from DB"""
 
     def __init__(self):
         self.db_helper = DBUtility()
 
-    def get_random_products(self, quantity=1):
+    def get_random_products(self, quantity=1) -> list:
+        """Get a random products from DB"""
+
         sql = f"""SELECT * FROM {self.db_helper.database}.{self.db_helper.table_prefix}posts 
                   WHERE post_type='product' LIMIT 500;"""
-        response_sql_all = self.db_helper.execute_select(sql)
-        response_sql = random.sample(response_sql_all, int(quantity))
-        return response_sql
+        result_select_all = self.db_helper.execute_select(sql)
+        result_select = random.sample(result_select_all, int(quantity))
+        return result_select
 
     def get_product_by_id(self, product_id) -> list:
         """Get product from DB by 'id'"""

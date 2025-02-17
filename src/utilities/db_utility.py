@@ -46,7 +46,6 @@ class DBUtility(object):
                                          port=self.port)
         else:
             raise Exception("Unknown WP_HOST.")
-
         return connection
 
     def execute_select(self, sql):
@@ -54,7 +53,6 @@ class DBUtility(object):
 
         with allure.step(f"Create connection to DB"):
             conn = self.create_connection()
-
         with allure.step(f"Execute SQL SELECT"):
             try:
                 # logger.debug(f"Executing: {sql}")
@@ -66,7 +64,6 @@ class DBUtility(object):
                 raise Exception(f"Failed running sql: {sql} \n  Error: {str(e)}")
             finally:
                 conn.close()
-
             return result_select
 
     def execute_sql(self, sql):
