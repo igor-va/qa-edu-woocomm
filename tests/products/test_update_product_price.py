@@ -55,7 +55,7 @@ def test_update_regular_price_should_update_price() -> None:
             f"Updating 'regular_price' did not update, expected {new_price}, actual {product_api['regular_price']}."
         assert product_api['sale_price'] == '', \
             f"The 'sale_price' field should be empty, actual {product_api['sale_price']}."
-    with allure.step(f"Get the product after the update and verify response"):
+    with allure.step(f"Verify product after the update"):
         product_api = products_helper.call_retrieve_product_by_id(product_id)
         assert product_api['price'] == new_price, \
             f"Updating 'regular_price' did not update 'price', expected {new_price}, actual {product_api['price']}."
@@ -65,40 +65,39 @@ def test_update_regular_price_should_update_price() -> None:
             f"The 'sale_price' field should be empty, actual {product_api['sale_price']}."
 
 
+@allure.feature("Products")
+@allure.story("Update a product")
+@allure.title("TCID-65 Test adding sale price should set on sale flag true")
+@allure.description("Verify updating 'sale_price' updates the 'on_price' field")
 @pytest.mark.tcid65
 def test_adding_sale_price_should_set_on_sale_flag_true():
     """
     When the 'sale_price' of a product is updated, then it should set the field 'on_sale'=True
     """
 
-    # Create helper objects
-    products_helper = ProductsHelper()
-    products_dao = ProductsDAO()
-
-    # First get a product from db that is not 'on_sale'
-    product_database = products_dao.get_random_products_that_are_not_on_sale(1)
-    product_database_id = product_database[0]['ID']
-
-    # Check the 'on_sale' field is 'False' to start with
-    product_response_before = products_helper.call_retrieve_product_by_id(product_database_id)
-    assert not product_response_before['on_sale'], \
-        f"Getting test data with 'on_sale'='False' but got 'True', unable to use this product for test."
-
-    # Update the 'sale_price' of the product
-    regular_price = product_response_before['regular_price']
-    if regular_price == "":
-        sale_price = 10
-    else:
-        sale_price = float(regular_price) * 0.75  # sale is 75% of original
-    payload = dict()
-    payload['sale_price'] = str(sale_price)
-    products_helper.call_update_product(product_database_id, payload=payload)
-
-    # Get the product 'sale_price' and verify is updated
-    product_response_after = products_helper.call_retrieve_product_by_id(product_database_id)
-    assert product_response_after['sale_price'] == str(sale_price), \
-        f"Updated product 'sale_price' but value did not update, product id '{product_database_id}', \
-        expected 'sale_price' '{sale_price}', but actual 'sale_price' '{product_response_after['sale_price']}'."
+    with allure.step(f"Get a product from DB that is not 'on_sale'"):
+        products_dao = ProductsDAO()
+        product_db = products_dao.get_random_products_that_are_not_on_sale(1)
+        product_db_id = product_db[0]['ID']
+    with allure.step(f"Check the 'on_sale' field is 'False' to start with"):
+        products_helper = ProductsHelper()
+        product_api = products_helper.call_retrieve_product_by_id(product_db_id)
+        assert not product_api['on_sale'], \
+            f"Getting test data with 'on_sale'='False', but got 'True', unable to use this product for test."
+    with allure.step(f"Update the 'sale_price' of the product"):
+        product_regular_price = product_api['regular_price']
+        if product_regular_price == "":
+            product_sale_price = generate_random_number_float(min_value=10, max_value=20)
+        else:
+            product_sale_price = float(product_regular_price) * 0.75  # sale is 75% of original
+        payload = dict()
+        payload['sale_price'] = str(product_sale_price)
+        products_helper.call_update_product(product_db_id, payload=payload)
+    with allure.step(f"Verify the product 'sale_price' field is updated"):
+        product_api = products_helper.call_retrieve_product_by_id(product_db_id)
+        product_api_sale_price = product_api['sale_price']
+        assert product_api_sale_price == str(product_sale_price), \
+            f"Field 'sale_price' did not update, expected {product_sale_price}', actual {product_api_sale_price}."
 
 
 @pytest.mark.tcid63

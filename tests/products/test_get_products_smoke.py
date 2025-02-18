@@ -14,7 +14,9 @@ pytestmark = [pytest.mark.products, pytest.mark.smoke, pytest.mark.api]
 @allure.description("Verify 'GET /products' does not return empty")
 @pytest.mark.tcid24
 def test_get_all_products() -> None:
-    """Verify 'GET /products' does not return empty"""
+    """
+    Verify 'GET /products' does not return empty
+    """
 
     with allure.step(f"Make the call 'List all products'"):
         products_helper = ProductsHelper()
@@ -29,7 +31,9 @@ def test_get_all_products() -> None:
 @allure.description("Verify 'GET /products/id' returns a product with the given id")
 @pytest.mark.tcid25
 def test_get_product_by_id() -> None:
-    """Verify 'GET /products/id' returns a product with the given id"""
+    """
+    Verify 'GET /products/id' returns a product with the given id
+    """
 
     with allure.step(f"Get a random product from DB"):
         product_db = ProductsDAO().get_random_products()

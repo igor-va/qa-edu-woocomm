@@ -34,7 +34,9 @@ class DBUtility(object):
         self.table_prefix = DB_HOST[self.machine][self.env]['table_prefix']
 
     def create_connection(self):
-        """Create connection to DB"""
+        """
+        Create connection to DB
+        """
 
         if self.wp_host == 'ampps':
             connection = pymysql.connect(host=self.host, user=self.creds['db_user'],
@@ -49,13 +51,15 @@ class DBUtility(object):
         return connection
 
     def execute_select(self, sql):
-        """Execute SQL SELECT"""
+        """
+        Execute SQL SELECT
+        """
 
         with allure.step(f"Create connection to DB"):
             conn = self.create_connection()
         with allure.step(f"Execute SQL SELECT"):
             try:
-                # logger.debug(f"Executing: {sql}")
+                logger.debug(f"Executing: {sql}")
                 cursor = conn.cursor(pymysql.cursors.DictCursor)
                 cursor.execute(sql)
                 result_select = cursor.fetchall()

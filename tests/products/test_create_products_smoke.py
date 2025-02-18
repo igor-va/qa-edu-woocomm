@@ -15,7 +15,9 @@ pytestmark = [pytest.mark.products, pytest.mark.smoke, pytest.mark.api]
 @allure.description("Verify 'POST /products' create a one simple product")
 @pytest.mark.tcid26
 def test_create_one_simple_product() -> None:
-    """Verify 'POST /products' create a one simple product"""
+    """
+    Verify 'POST /products' create a one simple product
+    """
 
     with allure.step(f"Generate test data"):
         payload = dict()
