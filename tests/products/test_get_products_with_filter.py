@@ -14,7 +14,7 @@ pytestmark = [pytest.mark.products, pytest.mark.regression]
 class TestListProductsWithFilter(object):
     """Tests for retrieve products with filter"""
 
-    @allure.title("Test get products with filter after")
+    @allure.title("TCID-51 Test get products with filter after")
     @allure.description("Verify 'GET /products' with filter 'after'")
     @pytest.mark.tcid51
     def test_get_products_with_filter_after(self) -> None:

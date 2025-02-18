@@ -20,7 +20,7 @@ class RequestsUtility(object):
     @staticmethod
     def assert_status_code(status_code, expected_status_code) -> None:
         assert status_code == expected_status_code, \
-            f"Bad 'status_code', expected '{expected_status_code}', actual '{status_code}'."
+            f"Bad 'status_code', expected {expected_status_code}, actual {status_code}."
 
     def post(self, endpoint, payload=None, headers=None, expected_status_code=200) -> dict:
         """Sends a POST request"""
@@ -35,7 +35,7 @@ class RequestsUtility(object):
             response_json = response_api.json()
             return response_json
 
-    def get(self, endpoint, payload=None, headers=None, expected_status_code=200):
+    def get(self, endpoint, payload=None, headers=None, expected_status_code=200) -> dict | list:
         """Sends a GET request"""
 
         with allure.step(f"Make the 'GET request'"):
@@ -48,11 +48,15 @@ class RequestsUtility(object):
             response_json = response_api.json()
             return response_json
 
-    def put(self, endpoint, payload=None, headers=None, expected_status_code=200):
-        url = self.base_url + endpoint
-        response_api = requests.put(url=url, json=payload, headers=headers, auth=self.auth)
-        status_code = response_api.status_code
-        response_json = response_api.json()
-        self.assert_status_code(url, status_code, expected_status_code, response_json)
-        logger.debug(f"PUT API response: {response_json}")
-        return response_json
+    def put(self, endpoint, payload=None, headers=None, expected_status_code=200) -> dict:
+        """Sends a PUT request"""
+
+        with allure.step(f"Make the 'PUT request'"):
+            url = self.base_url + endpoint
+            response_api = requests.put(url=url, json=payload, headers=headers, auth=self.auth)
+        with allure.step(f"Verify 'status code'"):
+            status_code = response_api.status_code
+            self.assert_status_code(status_code, expected_status_code)
+        with allure.step(f"Returned 'response'"):
+            response_json = response_api.json()
+            return response_json

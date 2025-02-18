@@ -11,7 +11,7 @@ pytestmark = [pytest.mark.products, pytest.mark.smoke, pytest.mark.api]
 
 @allure.feature("Products")
 @allure.story("Create a product")
-@allure.title("Test create one simple product")
+@allure.title("TCID-26 Test create one simple product")
 @allure.description("Verify 'POST /products' create a one simple product")
 @pytest.mark.tcid26
 def test_create_one_simple_product() -> None:

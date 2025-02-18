@@ -35,7 +35,6 @@ class ProductsHelper(object):
         response_json = []
         for i in range(1, max_pages + 1):
             logger.debug(f"List products page number: {i}")
-
             if not payload:  # Add payload data if None
                 payload = {}
             if 'per_page' not in payload.keys():  # Add number of items to be returned in result set
@@ -52,9 +51,10 @@ class ProductsHelper(object):
                 response_json.extend(response_json_part)
         else:
             raise Exception(f"Unable to find all products after {max_pages} pages.")
-
         return response_json
 
-    def call_update_product(self, product_id, payload=None):
+    def call_update_product(self, product_id, payload=None) -> dict:
+        """Call 'Update a product'"""
+
         response_json = self.requests_utility.put(f"{Endpoints.products}/{product_id}", payload=payload)
         return response_json

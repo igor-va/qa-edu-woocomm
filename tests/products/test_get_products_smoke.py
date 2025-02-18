@@ -10,7 +10,7 @@ pytestmark = [pytest.mark.products, pytest.mark.smoke, pytest.mark.api]
 
 @allure.feature("Products")
 @allure.story("List all products")
-@allure.title("Test get all products")
+@allure.title("TCID-24 Test get all products")
 @allure.description("Verify 'GET /products' does not return empty")
 @pytest.mark.tcid24
 def test_get_all_products() -> None:
@@ -25,7 +25,7 @@ def test_get_all_products() -> None:
 
 @allure.feature("Products")
 @allure.story("Retrieve a product")
-@allure.title("Test get product by id")
+@allure.title("TCID-25 Test get product by id")
 @allure.description("Verify 'GET /products/id' returns a product with the given id")
 @pytest.mark.tcid25
 def test_get_product_by_id() -> None:

@@ -10,7 +10,7 @@ TCID-24,Verify 'GET /products' does not return empty,Yes
 TCID-25,Verify 'GET /products/id' returns a product with the given id,Yes
 TCID-26,Verify 'POST /products' creates a simple product,Yes
 TCID-51,Verify 'GET /products' with filter 'after',Yes
-TCID-61,Verify update 'regular_price' updates 'price' field,
+TCID-61,Verify update 'regular_price' updates 'price' field,Do
 TCID-63,Verify update 'sale_price > 0' will set field 'on_sale'=True,
 TCID-64,"Verify update 'sale_price="" ""' will set field 'on_sale'=Fale",
 TCID-65,Verify update 'sale_price' updates the 'sale_price' field,
