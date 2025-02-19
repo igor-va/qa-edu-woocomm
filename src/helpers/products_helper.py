@@ -6,7 +6,7 @@ from src.endpoints.endpoints import Endpoints
 
 class ProductsHelper(object):
     """
-    The 'Products' API class allows you to create, view, update, and delete individual or a batch of products
+    The products API allows you to create, view, update, and delete individual, or a batch, of products.
     """
 
     def __init__(self):

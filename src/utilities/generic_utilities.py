@@ -1,16 +1,25 @@
-import logging as logger
 import string
 from faker import Faker
 
 
-def generate_random_email_and_password() -> dict:
-    logger.debug("Generating random email and password.")
+def generate_random_email() -> str:
+    """
+    Generate random email
+    """
+
     fake = Faker()
     email = fake.email()
+    return email
+
+
+def generate_random_password() -> str:
+    """
+    Generate random password
+    """
+
+    fake = Faker()
     password = fake.password(length=20)
-    random_info = {'email': email, 'password': password}
-    logger.debug(f"Randomly generated email and password: {random_info}")
-    return random_info
+    return password
 
 
 def generate_random_string() -> str:

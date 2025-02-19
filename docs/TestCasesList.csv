@@ -1,6 +1,6 @@
 Test Case Id,Test Case Name,Code
 Customers API,,
-TCID-29,Verify 'POST /customers' creates user with email and password only,
+TCID-29,Verify 'POST /customers' creates user with email and password only,Do
 TCID-30,Verify 'GET /customers' lists all users,
 TCID-47,Veiry 'create customer' failes if email exists,
 ,,
