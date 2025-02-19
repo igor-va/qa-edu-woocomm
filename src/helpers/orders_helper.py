@@ -18,7 +18,7 @@ class OrdersHelper(object):
 
     def call_create_order(self, payload_add=None) -> dict:
         """
-        This API helps you to create a new order.
+        Call 'Create an order', this API helps you to create a new order.
         In the data (create_order_payload.json) verify the product id used exists, "line_items": {"product_id": 12,"quantity": 1}
         If the product does not exist you will get 'completed' as the default status of the order when created.
         The default should be 'processing' if the product is valid.

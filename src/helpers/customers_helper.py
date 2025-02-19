@@ -13,7 +13,7 @@ class CustomersHelper(object):
 
     def call_create_customer(self, email=None, password=None, exp_st_code=201, **kwargs) -> dict:
         """
-        This API helps you to create a new customer.
+        Call 'Create a customer', this API helps you to create a new customer.
         """
 
         if not email:
@@ -30,7 +30,7 @@ class CustomersHelper(object):
 
     def call_list_all_customers(self) -> list:
         """
-        Call 'List all customers'
+        Call 'List all customers', this API helps you to view all the customers.
         """
 
         response_json = self.requests_utility.get(Endpoints.customers)

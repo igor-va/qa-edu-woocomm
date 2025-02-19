@@ -38,27 +38,30 @@ class TestCreateOrder(object):
             products_id_expected = [{'product_id': product_id}]
             orders_helper.verify_order_is_created(order_api, customer_id, products_id_expected, payload)
 
+    @allure.title("TCID-49 Test create paid order new created customer")
+    @allure.description("Create a 'paid' order with 'guest' customer")
     @pytest.mark.tcid49
-    def test_create_paid_order_new_created_customer(self, my_orders_smoke_setup):
-        # Create helper objects
-        orders_helper = my_orders_smoke_setup['orders_helper']
-        customers_helper = CustomersHelper()
+    def test_create_paid_order_new_created_customer(self, my_orders_smoke_setup) -> None:
+        """
+        Create a 'paid' order with 'new created' customer
+        """
 
-        # Make the call
-        customer_response = customers_helper.call_create_customer()
-        customer_response_id = customer_response['id']
-        product_id = my_orders_smoke_setup['product_database_id']
-
-        payload = {"line_items": [
-            {
-                "product_id": product_id,
-                "quantity": generate_random_number_integer()
+        with allure.step(f"Make the call 'Create a customer'"):
+            customers_helper = CustomersHelper()
+            customer_api = customers_helper.call_create_customer()
+            customer_api_id = customer_api['id']
+        with allure.step(f"Make the call 'Create an order'"):
+            product_id = my_orders_smoke_setup['product_db_id']
+            orders_helper = my_orders_smoke_setup['orders_helper']
+            payload = {"line_items": [
+                {
+                    "product_id": product_id,
+                    "quantity": generate_random_number_integer()
+                }
+            ],
+                "customer_id": customer_api_id
             }
-        ],
-            "customer_id": customer_response_id
-        }
-        order_response = orders_helper.call_create_order(payload_add=payload)
-
-        # Verify response
-        expected_products = [{'product_id': product_id}]
-        orders_helper.verify_order_is_created(order_response, customer_response_id, expected_products)
+            order_api = orders_helper.call_create_order(payload_add=payload)
+        with allure.step(f"Verify response"):
+            products_id_expected = [{'product_id': product_id}]
+            orders_helper.verify_order_is_created(order_api, customer_api_id, products_id_expected, payload)
