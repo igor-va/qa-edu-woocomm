@@ -50,6 +50,9 @@ def generate_random_number_float(min_value=10, max_value=1000, round_value=2) ->
 
 
 def generate_random_number_integer() -> str:
+    """
+    Generate random number integer
+    """
     fake = Faker()
     number = fake.random_int(min=1, max=20)
     return str(number)

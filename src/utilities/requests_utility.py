@@ -9,6 +9,9 @@ from src.utilities.credentials_utility import CredentialsUtility
 
 
 class RequestsUtility(object):
+    """
+    Requests API Utility
+    """
 
     def __init__(self):
         wc_creds = CredentialsUtility.get_wc_api_keys()
@@ -23,7 +26,9 @@ class RequestsUtility(object):
             f"Bad 'status_code', expected {expected_status_code}, actual {status_code}."
 
     def post(self, endpoint, payload=None, headers=None, expected_status_code=200) -> dict:
-        """Sends a POST request"""
+        """
+        Sends a POST request
+        """
 
         with allure.step(f"Make the 'POST request'"):
             url = self.base_url + endpoint
@@ -36,7 +41,9 @@ class RequestsUtility(object):
             return response_json
 
     def get(self, endpoint, payload=None, headers=None, expected_status_code=200) -> dict | list:
-        """Sends a GET request"""
+        """
+        Sends a GET request
+        """
 
         with allure.step(f"Make the 'GET request'"):
             url = self.base_url + endpoint
@@ -49,7 +56,9 @@ class RequestsUtility(object):
             return response_json
 
     def put(self, endpoint, payload=None, headers=None, expected_status_code=200) -> dict:
-        """Sends a PUT request"""
+        """
+        Sends a PUT request
+        """
 
         with allure.step(f"Make the 'PUT request'"):
             url = self.base_url + endpoint

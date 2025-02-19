@@ -1,7 +1,6 @@
 import pytest
 
 from src.helpers.orders_helper import OrdersHelper
-from src.utilities.woo_api_utility import WooAPIUtility
 from src.utilities.generic_utilities import *
 
 
@@ -17,7 +16,7 @@ pytestmark = [pytest.mark.orders, pytest.mark.regression]
 def test_update_order_status(new_status):
     # Create new order
     orders_helper = OrdersHelper()
-    order_response_cur = orders_helper.create_order()
+    order_response_cur = orders_helper.call_create_order()
     current_status = order_response_cur['status']
     assert current_status != new_status, \
         f"Current status of order is already '{new_status}',unable to run test."
@@ -42,7 +41,7 @@ def test_update_order_status_to_random_string():
 
     # Create new order
     orders_helper = OrdersHelper()
-    order_response_cur = orders_helper.create_order()
+    order_response_cur = orders_helper.call_create_order()
     order_id = order_response_cur['id']
 
     # Update the 'status'
@@ -62,7 +61,7 @@ def test_update_order_status_to_random_string():
 def test_update_order_customer_note():
     # Create new order
     orders_helper = OrdersHelper()
-    order_response_cur = orders_helper.create_order()
+    order_response_cur = orders_helper.call_create_order()
     order_id = order_response_cur['id']
 
     # Update the 'customer_note'

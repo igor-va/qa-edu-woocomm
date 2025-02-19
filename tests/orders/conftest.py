@@ -7,18 +7,17 @@ from src.helpers.products_helper import ProductsHelper
 
 
 @pytest.fixture(scope='module')
-def my_orders_smoke_setup():
-    # Create helper objects
+def my_orders_smoke_setup() -> dict:
+    """
+    Get random product from DB and 'orders_helper'
+    """
+
     products_dao = ProductsDAO()
     orders_helper = OrdersHelper()
-
-    # Get random product from db
-    product_database = products_dao.get_random_products(1)
-    product_database_id = product_database[0]['ID']
-
-    setup_info = {'product_database_id': product_database_id,
+    product_db = products_dao.get_random_products(1)
+    product_db_id = product_db[0]['ID']
+    setup_info = {'product_db_id': product_db_id,
                   'orders_helper': orders_helper}
-
     return setup_info
 
 
