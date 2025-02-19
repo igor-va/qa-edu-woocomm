@@ -11,7 +11,7 @@ class CustomersHelper(object):
     def __init__(self):
         self.requests_utility = RequestsUtility()
 
-    def create_customer(self, email=None, password=None, exp_st_code=201, **kwargs) -> dict:
+    def call_create_customer(self, email=None, password=None, exp_st_code=201, **kwargs) -> dict:
         """
         This API helps you to create a new customer.
         """
@@ -26,4 +26,12 @@ class CustomersHelper(object):
         payload.update(kwargs)
 
         response_json = self.requests_utility.post(Endpoints.customers, payload=payload, expected_status_code=exp_st_code)
+        return response_json
+
+    def call_list_all_customers(self) -> list:
+        """
+        Call 'List all customers'
+        """
+
+        response_json = self.requests_utility.get(Endpoints.customers)
         return response_json

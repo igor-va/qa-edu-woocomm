@@ -1,18 +1,24 @@
-import logging as logger
 import pytest
+import allure
 
-from src.utilities.requests_utility import RequestsUtility
-from src.endpoints.endpoints import Endpoints
+from src.helpers.customers_helper import CustomersHelper
 
 
 pytestmark = [pytest.mark.customers, pytest.mark.smoke]
 
 
+@allure.feature("Customers")
+@allure.story("List all customers")
+@allure.title("TCID-30 Test get all customers")
+@allure.description("Verify 'GET /customers' lists all users")
 @pytest.mark.tcid30
-def test_get_all_customers():
-    # Make the call
-    requests_helper = RequestsUtility()
-    customer_response = requests_helper.get(Endpoints.customers)
+def test_get_all_customers() -> None:
+    """
+    Verify 'GET /customers' lists all users
+    """
 
-    # Verify response is not empty
-    assert customer_response, f"Response of list all customers is empty."
+    with allure.step(f"Make the call 'List all customers'"):
+        requests_helper = CustomersHelper()
+        customer_api = requests_helper.call_list_all_customers()
+    with allure.step(f"Verify response is not empty"):
+        assert customer_api, f"Response of list all customers is empty."

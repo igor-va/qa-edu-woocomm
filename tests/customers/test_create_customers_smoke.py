@@ -29,7 +29,7 @@ class TestCreateCustomer(object):
             password = generate_random_password()
         with allure.step(f"Make the call 'Create a customer'"):
             customers_helper = CustomersHelper()
-            customer_api = customers_helper.create_customer(email=email, password=password)
+            customer_api = customers_helper.call_create_customer(email=email, password=password)
         with allure.step(f"Verify 'email' and 'first_name' in the response"):
             assert customer_api['email'] == email, \
                 f"Call 'Create a customer' return wrong 'email', expected {email}, actual {customer_api['email']}."
@@ -57,7 +57,7 @@ class TestCreateCustomer(object):
             customer_db_email = customer_db[0]['user_email']
         with allure.step(f"Make the call 'Create a customer' with existing email"):
             customer_helper = CustomersHelper()
-            customer_api = customer_helper.create_customer(email=customer_db_email, exp_st_code=400)
+            customer_api = customer_helper.call_create_customer(email=customer_db_email, exp_st_code=400)
         with allure.step(f"Verify customer is not created in DB"):
             assert customer_api['code'] == 'registration-error-email-exists', \
                 f"Create customer with existing user error 'code' is not correct."

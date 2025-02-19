@@ -36,7 +36,7 @@ def test_create_paid_order_new_created_customer(my_orders_smoke_setup):
     customers_helper = CustomersHelper()
 
     # Make the call
-    customer_response = customers_helper.create_customer()
+    customer_response = customers_helper.call_create_customer()
     customer_response_id = customer_response['id']
     product_id = my_orders_smoke_setup['product_database_id']
 
