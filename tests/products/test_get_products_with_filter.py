@@ -13,7 +13,7 @@ pytestmark = [pytest.mark.products, pytest.mark.regression]
 @allure.story("List all products")
 class TestListProductsWithFilter(object):
     """
-    Tests for retrieve products with filter
+    Tests for retrieve 'List all products' with filter
     """
 
     @allure.title("TCID-51 Test get products with filter after")

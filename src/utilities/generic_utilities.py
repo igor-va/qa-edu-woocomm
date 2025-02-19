@@ -14,7 +14,9 @@ def generate_random_email_and_password() -> dict:
 
 
 def generate_random_string() -> str:
-    """Generate random string"""
+    """
+    Generate random string
+    """
 
     fake = Faker()
     random_string = fake.word(part_of_speech="noun").title()
@@ -28,7 +30,9 @@ def generate_random_sentence() -> str:
 
 
 def generate_random_number_float(min_value=10, max_value=1000, round_value=2) -> str:
-    """Generate random number float"""
+    """
+    Generate random number float
+    """
 
     fake = Faker()
     number = fake.pyfloat(min_value=min_value, max_value=max_value, right_digits=round_value)
