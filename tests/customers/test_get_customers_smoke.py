@@ -18,7 +18,7 @@ def test_get_all_customers() -> None:
     """
 
     with allure.step(f"Make the call 'List all customers'"):
-        requests_helper = CustomersHelper()
-        customer_api = requests_helper.call_list_all_customers()
+        customer_helper = CustomersHelper()
+        customer_api = customer_helper.call_list_all_customers()
     with allure.step(f"Verify response is not empty"):
         assert customer_api, f"Response of list all customers is empty."
