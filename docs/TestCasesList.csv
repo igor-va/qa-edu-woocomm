@@ -19,9 +19,7 @@ TCID-65,Verify update 'sale_price' updates the 'sale_price' field,Yes
 Order API,,
 TCID-48,Create a 'paid' order with 'guest' customer,Yes
 TCID-49,Create a 'paid' order with 'new created' customer,Yes
-TCID-55,Update order status to 'canceled',
-TCID-56,Update order status to 'completed,
-TCID-57,Update order status to 'on-hold',
+TCID-55,"Update order status to 'canceled', to 'completed’, to 'on-hold'",Yes
 TCID-58,Update order status to random string,
 TCID-59,Update order 'customer_note',
 TCID-60,Order with 50% off coupon should reduce total by 50%,

@@ -63,10 +63,18 @@ class OrdersHelper(object):
                 assert product['product_id'] in api_products_id, \
                     f"Product 'id' {product['product_id']} not have in DB, order 'id' {order_api_id}."
 
-    def call_update_an_order(self, order_id, payload, exp_st_code=200):
-        response_json = self.woo_helper.put(f'{Endpoints.orders}/{order_id}', params=payload, expected_status_code=exp_st_code)
+    def call_update_an_order(self, order_id, payload, exp_st_code=200) -> dict:
+        """
+        Call 'Update an Order', this API lets you make changes to an order.
+        """
+
+        response_json = self.requests_utility.put(f'{Endpoints.orders}/{order_id}', payload=payload, expected_status_code=exp_st_code)
         return response_json
 
-    def call_retrieve_an_order(self, order_id):
-        response_json = self.woo_helper.get(f"{Endpoints.orders}/{order_id}")
+    def call_retrieve_an_order(self, order_id) -> dict:
+        """
+        Call 'Retrieve an order', this API lets you retrieve and view a specific order.
+        """
+
+        response_json = self.requests_utility.get(f"{Endpoints.orders}/{order_id}")
         return response_json
