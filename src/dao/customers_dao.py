@@ -21,9 +21,12 @@ class CustomersDAO(object):
         result_select = self.db_helper.execute_select(sql)
         return result_select
 
-    def get_random_customer_from_db(self, qty=1):
+    def get_random_customer_from_db(self, qty=1) -> list:
+        """
+        Get random customer from DB
+        """
+
         sql = f"""SELECT * FROM {self.db_helper.database}.{self.db_helper.table_prefix}users 
                   ORDER BY id DESC LIMIT 5000;"""
-        request_sql = self.db_helper.execute_select(sql)
-
-        return random.sample(request_sql, int(qty))
+        result_select = self.db_helper.execute_select(sql)
+        return random.sample(result_select, int(qty))

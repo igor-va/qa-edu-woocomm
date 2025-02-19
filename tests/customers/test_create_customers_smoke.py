@@ -43,21 +43,24 @@ class TestCreateCustomer(object):
             assert customer_api_id == customer_db_id, \
                 f"API 'id' not same as DB 'ID, API 'id' {customer_api_id}, DB 'ID' {customer_db_id}."
 
+    @allure.title("TCID-47 Test create customer fail for existing email")
+    @allure.description("Verify 'create customer' fail if email exists")
     @pytest.mark.tcid47
-    def test_create_customer_fail_for_existing_email(self):
-        # Get existing email from db
-        customers_dao = CustomersDAO()
-        customer_exist = customers_dao.get_random_customer_from_db()
-        customer_email = customer_exist[0]['user_email']
+    def test_create_customer_fail_for_existing_email(self) -> None:
+        """
+        Verify 'create customer' fail if email exists
+        """
 
-        # Call the api with existing email
-        customer_helper = CustomersHelper()
-        customer_response = customer_helper.create_customer(email=customer_email, exp_st_code=400)
-
-        # Verify customer is not created in database
-        assert customer_response['code'] == 'registration-error-email-exists', \
-            f"Create customer with existing user error 'code' is not correct, \
-            should be: 'registration-error-email-exists', but returned '{customer_response['code']}'."
-        assert customer_response['message'] == \
-            f"An account is already registered with {customer_email}. Please log in or use a different email address.", \
-            f"Create customer with existing user error 'message' is not correct."
+        with allure.step(f"Get existing email from DB"):
+            customers_dao = CustomersDAO()
+            customer_db = customers_dao.get_random_customer_from_db()
+            customer_db_email = customer_db[0]['user_email']
+        with allure.step(f"Make the call 'Create a customer' with existing email"):
+            customer_helper = CustomersHelper()
+            customer_api = customer_helper.create_customer(email=customer_db_email, exp_st_code=400)
+        with allure.step(f"Verify customer is not created in DB"):
+            assert customer_api['code'] == 'registration-error-email-exists', \
+                f"Create customer with existing user error 'code' is not correct."
+            assert customer_api['message'] == (f"An account is already registered with {customer_db_email}. "
+                                               f"Please log in or use a different email address."), \
+                f"Create customer with existing user error 'message' is not correct."
